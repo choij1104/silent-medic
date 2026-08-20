@@ -4,12 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="theme-color" content="#1565c0">
-<title>SILENT MEDIC v0.4.2 — Offline Clinical Decision Support</title>
+<title>SILENT MEDIC v0.4.3 — Offline Clinical Decision Support</title>
 <!--
-  SILENT MEDIC v0.4.2 — Offline Clinical Decision Support for Prolonged Field Care
+  SILENT MEDIC v0.4.3 — Offline Clinical Decision Support for Prolonged Field Care
   © 2026 Jae H. Choi, MSc, PhD, DVSc
-  Knowledge base: TCCC-RX (119 drugs · 433 dual-use mappings · 9 categories)
+  Knowledge base: TCCC-RX (119 drugs · 443 dual-use mappings · 9 categories)
   Runtime: Browser-resident; no data transmitted.
+
+  VERSION HISTORY
+  v0.4.3  2026-08-20  Legibility pass: base type 13px->15px across the interface,
+                      palette reworked to WCAG AA contrast (label and citation text
+                      raised from 2.2-2.9:1 to 5.4-6.4:1), query field and buttons
+                      enlarged to 42px touch targets. Corrected knowledge base counts
+                      to the verified figures: 119 drugs, 443 dual-use mappings
+                      (previously shown variously as 118/119/120 and 433).
+                      No clinical content, rule, or dosing change.
+  v0.4.2  2026-05-15  TCCC 2026 (Change 25-1) knowledge base; decision support module.
 -->
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -18,28 +28,28 @@
   --panel:     #ffffff;
   --panel-2:   #f8fafc;
   --panel-3:   #eef2f7;
-  --border:    #d4dde8;
-  --border-2:  #a8bdd0;
-  --border-3:  #e1e7ef;
+  --border:    #c2cede;
+  --border-2:  #8ba5bd;
+  --border-3:  #d3dcea;
   --text:      #1c2e3e;
   --text-2:    #3a5a78;
-  --text-3:    #7a9ab8;
-  --text-4:    #9bb0c4;
-  --blue:      #1565c0;
+  --text-3:    #42627e;
+  --text-4:    #4f6d86;
+  --blue:      #0f57ab;
   --blue-dark: #0d47a1;
   --blue-bg:   #e3f0ff;
   --blue-dim:  #bbd6f8;
-  --red:       #c62828;
+  --red:       #b41f1f;
   --red-bg:    #fdecea;
-  --orange:    #bf5000;
+  --orange:    #9c4600;
   --orange-bg: #fff3e0;
-  --green:     #1b6e3a;
+  --green:     #186334;
   --green-bg:  #e8f5ee;
-  --teal:      #00695c;
+  --teal:      #005c50;
   --teal-bg:   #e0f4f1;
   --purple:    #5200a8;
   --purple-bg: #f0e8ff;
-  --r12:       #bf4000;
+  --r12:       #a03600;
   --r12-bg:    #fff0e6;
   --pfc:       #5200a8;
   --pfc-bg:    #f0e8ff;
@@ -50,50 +60,40 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.45;
   height: 100vh;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
   -webkit-font-smoothing: antialiased;
 }
 /* ============ HEADER BAR ============ */
 .header {
-  height: 44px;
+  min-height: 54px;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  row-gap: 4px;
   background: var(--blue-dark);
   color: #fff;
   display: flex;
   align-items: center;
-  padding: 0 16px;
+  padding: 6px 16px;
   gap: 18px;
-  font-size: 12px;
+  font-size: 14px;
   border-bottom: 1px solid #08305c;
 }
 .header .logo {
   font-weight: 700;
-  font-size: 14px;
+  font-size: 16px;
   letter-spacing: 0.04em;
   display: flex;
   align-items: center;
   gap: 8px;
 }
-.header .logo::before {
-  content: '';
-  width: 22px;
-  height: 22px;
-  background: #fff;
-  color: var(--blue-dark);
-  border-radius: 3px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 900;
-  font-size: 11px;
-  background-image:
-    linear-gradient(#fff, #fff),
-    linear-gradient(#fff, #fff);
-}
+.header .logo::before { content: none; }
 .header .logo .icon {
-  width: 22px; height: 22px;
+  width: 26px; height: 26px;
   background: #fff;
   border-radius: 3px;
   color: var(--blue-dark);
@@ -101,24 +101,24 @@ body {
   align-items: center;
   justify-content: center;
   font-weight: 800;
-  font-size: 12px;
+  font-size: 14px;
   font-family: 'Segoe UI', sans-serif;
 }
 .header .divider {
   width: 1px;
   height: 22px;
-  background: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.35);
 }
 .header .breadcrumb {
   color: rgba(255,255,255,0.85);
-  font-size: 12px;
+  font-size: 14px;
 }
 .header .spacer { flex: 1; }
 .header .status-group {
   display: flex;
   gap: 14px;
   align-items: center;
-  font-size: 11px;
+  font-size: 13px;
   color: rgba(255,255,255,0.9);
 }
 .header .status-item {
@@ -136,28 +136,21 @@ body {
 .header .dot.err   { background: #ef5350; }
 .header .clock {
   font-family: 'Consolas', 'Courier New', monospace;
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0.02em;
 }
 .header .user-badge {
   background: rgba(255,255,255,0.12);
   padding: 4px 10px;
   border-radius: 3px;
-  font-size: 11px;
+  font-size: 13px;
 }
 /* ============ LAYOUT ============ */
 .layout {
   display: grid;
   grid-template-columns: 240px 1fr 320px;
-  height: calc(100vh - 44px - 26px);
-}
-@media (max-width: 1100px) {
-  .layout { grid-template-columns: 220px 1fr; }
-  .right-panel { display: none; }
-}
-@media (max-width: 800px) {
-  .layout { grid-template-columns: 1fr; }
-  .left-panel { display: none; }
+  flex: 1 1 auto;
+  min-height: 0;
 }
 /* ============ LEFT PANEL ============ */
 .left-panel {
@@ -172,7 +165,7 @@ body {
 }
 .section-header {
   padding: 8px 14px;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -188,7 +181,7 @@ body {
   color: var(--blue);
   padding: 1px 6px;
   border-radius: 8px;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
 }
 .section-body { padding: 6px 0; }
@@ -197,7 +190,7 @@ body {
   align-items: center;
   gap: 8px;
   padding: 6px 14px;
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text-2);
   cursor: pointer;
   border-left: 3px solid transparent;
@@ -211,7 +204,7 @@ body {
 }
 .nav-item .nav-tag {
   margin-left: auto;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--text-3);
   background: var(--panel-3);
   padding: 1px 5px;
@@ -233,7 +226,7 @@ body {
   border: 1px solid var(--border);
   background: var(--panel-2);
   color: var(--text-3);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-align: center;
@@ -255,7 +248,7 @@ body {
   overflow: hidden;
 }
 .tab-bar {
-  height: 36px;
+  height: 42px;
   background: var(--panel);
   border-bottom: 1px solid var(--border);
   display: flex;
@@ -267,7 +260,7 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text-2);
   border-right: 1px solid var(--border-3);
   cursor: pointer;
@@ -287,7 +280,7 @@ body {
   background: var(--blue-bg);
   color: var(--blue);
   border-radius: 2px;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
   display: inline-flex;
   align-items: center;
@@ -310,7 +303,7 @@ body {
 }
 .query-mode {
   padding: 6px 12px;
-  font-size: 11px;
+  font-size: 13px;
   color: var(--text-2);
   background: var(--panel-2);
   cursor: pointer;
@@ -325,12 +318,12 @@ body {
 }
 .query-input {
   flex: 1;
-  height: 32px;
+  height: 42px;
   padding: 0 12px;
   border: 1px solid var(--border);
   border-radius: 3px;
   font-family: inherit;
-  font-size: 13px;
+  font-size: 15px;
   color: var(--text);
   background: var(--panel);
   outline: none;
@@ -340,13 +333,13 @@ body {
   box-shadow: 0 0 0 2px rgba(21,101,192,0.15);
 }
 .query-btn {
-  height: 32px;
+  height: 42px;
   padding: 0 18px;
   background: var(--blue);
   color: #fff;
   border: none;
   border-radius: 3px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
 }
@@ -362,26 +355,30 @@ body {
   text-align: center;
   padding: 40px 20px;
   color: var(--text-3);
-  font-size: 13px;
+  font-size: 15px;
 }
 .empty-state h3 {
   color: var(--text-2);
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 600;
   margin-bottom: 8px;
 }
 .empty-state .examples {
   margin-top: 18px;
-  display: inline-block;
-  text-align: left;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
 }
 .empty-state .examples .ex {
-  padding: 4px 10px;
-  margin: 3px 0;
+  padding: 9px 14px;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 3px;
-  font-size: 12px;
+  font-size: 14px;
   color: var(--blue);
   cursor: pointer;
   font-family: 'Consolas', monospace;
@@ -389,7 +386,7 @@ body {
 .empty-state .examples .ex:hover { background: var(--blue-bg); }
 /* Result entries */
 .result-meta {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--text-3);
   margin-bottom: 10px;
   padding: 6px 10px;
@@ -414,7 +411,7 @@ body {
   align-items: center;
 }
 .drug-name {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--blue-dark);
   display: flex;
@@ -426,7 +423,7 @@ body {
   gap: 4px;
 }
 .badge {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   padding: 2px 7px;
   border-radius: 2px;
@@ -447,12 +444,12 @@ body {
   display: grid;
   grid-template-columns: 110px 1fr;
   gap: 14px;
-  font-size: 12px;
+  font-size: 14px;
 }
 .drug-row:last-child { border-bottom: none; }
 .drug-row-label {
   color: var(--text-3);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.03em;
   text-transform: uppercase;
@@ -469,7 +466,7 @@ body {
   color: var(--blue-dark);
   padding: 1px 5px;
   border-radius: 2px;
-  font-size: 12px;
+  font-size: 14px;
 }
 .warning-banner {
   margin: 0;
@@ -477,7 +474,7 @@ body {
   background: var(--red-bg);
   border-left: 3px solid var(--red);
   color: var(--red);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
 }
 .warning-banner::before {
@@ -487,11 +484,11 @@ body {
 .level-context {
   padding: 8px 14px;
   border-bottom: 1px solid var(--border-3);
-  font-size: 12px;
+  font-size: 14px;
 }
 .level-context-label {
   display: inline-block;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
   padding: 1px 6px;
   border-radius: 2px;
@@ -509,7 +506,7 @@ body {
 }
 .dual-use-block:last-child { border-bottom: none; }
 .dual-use-title {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--text-2);
   margin-bottom: 3px;
@@ -520,13 +517,13 @@ body {
   font-weight: 700;
 }
 .dual-use-note {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text);
   line-height: 1.5;
 }
 .dual-use-caveat {
   margin-top: 4px;
-  font-size: 11px;
+  font-size: 13px;
   color: var(--orange);
   padding: 4px 8px;
   background: var(--orange-bg);
@@ -537,30 +534,30 @@ body {
   font-weight: 700;
 }
 /* Evidence tier badges (4-tier: strong / moderate / emerging / investigational) */
-.ev-tier { font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 2px; margin-left: 6px; letter-spacing: 0.03em; vertical-align: middle; }
+.ev-tier { font-size: 11px; font-weight: 700; padding: 1px 5px; border-radius: 2px; margin-left: 6px; letter-spacing: 0.03em; vertical-align: middle; }
 .ev-strong         { background: var(--green-bg);  color: var(--green); }
 .ev-moderate       { background: var(--blue-bg);   color: var(--blue); }
 .ev-emerging       { background: #fff8e1;          color: #7a5f00;  }
 .ev-investigational{ background: var(--purple-bg); color: var(--purple); }
 /* Source-authority badges. mechanistic stands out (orange); others stay calm. */
-.src-badge { font-size: 9px; font-weight: 600; padding: 1px 5px; border-radius: 2px; margin-left: 4px; letter-spacing: 0.04em; text-transform: uppercase; vertical-align: middle; }
+.src-badge { font-size: 11px; font-weight: 600; padding: 1px 5px; border-radius: 2px; margin-left: 4px; letter-spacing: 0.04em; text-transform: uppercase; vertical-align: middle; }
 .src-tccc        { background: #e7f0fb; color: #1f5fa8; border: 1px solid #b9d4ee; }
 .src-jts         { background: #eef1f4; color: #566b80; border: 1px solid #cdd6df; }
 .src-literature  { background: #f4f5f6; color: #79858f; border: 1px solid #dde1e5; }
 .src-mechanistic { background: #fff4e6; color: #b5651d; border: 1px solid #f0c896; }
 /* Integrity badge in header */
-.integrity-badge { font-size: 10px; padding: 2px 7px; border-radius: 2px; margin-left: 6px; font-weight: 600; letter-spacing: 0.02em; }
+.integrity-badge { font-size: 12px; padding: 2px 7px; border-radius: 2px; margin-left: 6px; font-weight: 600; letter-spacing: 0.02em; }
 .integrity-ok    { background: rgba(76,175,80,0.15); color: #4caf50; border: 1px solid rgba(76,175,80,0.4); }
 .integrity-fail  { background: rgba(239,83,80,0.15); color: #ff7a78; border: 1px solid rgba(239,83,80,0.4); }
 /* History panel button */
-.recent-clear { font-size: 9px; color: var(--text-3); cursor: pointer; padding: 1px 5px; border: 1px solid var(--border-3); border-radius: 2px; }
+.recent-clear { font-size: 11px; color: var(--text-3); cursor: pointer; padding: 1px 5px; border: 1px solid var(--border-3); border-radius: 2px; }
 .recent-clear:hover { color: var(--red); border-color: var(--red); }
-.recent-note { font-size: 9px; color: var(--text-3); padding: 4px 14px; font-style: italic; border-bottom: 1px solid var(--border-3); }
+.recent-note { font-size: 11px; color: var(--text-3); padding: 4px 14px; font-style: italic; border-bottom: 1px solid var(--border-3); }
 .thinking {
   padding: 20px;
   text-align: center;
   color: var(--text-3);
-  font-size: 12px;
+  font-size: 14px;
 }
 .thinking::after {
   content: '...';
@@ -583,7 +580,7 @@ body {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 10px;
-  font-size: 12px;
+  font-size: 14px;
   border-bottom: 1px solid var(--border-3);
 }
 .kv-label { color: var(--text-3); }
@@ -597,7 +594,7 @@ body {
 }
 .recent-list li {
   padding: 6px 14px;
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text-2);
   cursor: pointer;
   border-bottom: 1px solid var(--border-3);
@@ -609,26 +606,36 @@ body {
   margin-bottom: 2px;
 }
 .recent-list li .recent-time {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--text-3);
 }
 /* ============ FOOTER ============ */
 .footer {
-  height: 26px;
+  height: 34px;
+  min-height: 34px;
+  flex: 0 0 auto;
   background: var(--blue-dark);
   color: rgba(255,255,255,0.9);
   border-top: 1px solid #08305c;
-  font-size: 11px;
+  font-size: 13px;
   display: flex;
   align-items: center;
   padding: 0 16px;
   gap: 20px;
 }
-.footer .footer-item { display: flex; gap: 6px; align-items: center; }
+.footer .footer-item {
+  white-space: nowrap;
+  flex: 0 0 auto; display: flex; gap: 6px; align-items: center; }
 .footer .spacer { flex: 1; }
 .footer .copyright {
-  color: rgba(255,255,255,0.65);
-  font-size: 10px;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: right;
+  color: rgba(255,255,255,0.85);
+  font-size: 12px;
 }
 /* ============ BOOT ============ */
 .boot {
@@ -654,7 +661,7 @@ body {
   box-shadow: 0 2px 12px rgba(0,0,0,0.06);
 }
 .boot-title {
-  font-size: 18px;
+  font-size: 21px;
   font-weight: 700;
   color: var(--blue-dark);
   margin-bottom: 4px;
@@ -663,8 +670,8 @@ body {
   gap: 10px;
 }
 .boot-title .icon-box {
-  width: 28px;
-  height: 28px;
+  width: 34px;
+  height: 34px;
   background: var(--blue-dark);
   color: #fff;
   border-radius: 3px;
@@ -672,10 +679,10 @@ body {
   align-items: center;
   justify-content: center;
   font-weight: 800;
-  font-size: 13px;
+  font-size: 15px;
 }
 .boot-sub {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--text-3);
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -683,13 +690,13 @@ body {
 }
 .boot-log {
   font-family: 'Consolas', 'Courier New', monospace;
-  font-size: 11px;
+  font-size: 13px;
   color: var(--text-2);
   background: var(--panel-2);
   border: 1px solid var(--border-3);
   border-radius: 3px;
   padding: 10px 12px;
-  height: 130px;
+  height: 150px;
   overflow: hidden;
   margin-bottom: 14px;
   line-height: 1.6;
@@ -714,12 +721,12 @@ body {
 }
 .boot-btn {
   width: 100%;
-  height: 36px;
+  height: 44px;
   background: var(--blue);
   color: #fff;
   border: none;
   border-radius: 3px;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
 }
@@ -731,42 +738,82 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--border-2); border: 2px solid var(--panel-2); border-radius: 5px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-3); }
 /* ============ DECISION SUPPORT MODULE (v0.4.2) ============ */
-.de-toggle{position:fixed;bottom:14px;right:14px;background:linear-gradient(135deg,#1565c0,#0d47a1);color:#fff;border:none;border-radius:50px;padding:11px 18px;font-size:12px;font-weight:700;letter-spacing:0.5px;cursor:pointer;box-shadow:0 4px 12px rgba(21,101,192,0.4);z-index:100;display:flex;align-items:center;gap:6px;transition:all 0.2s}
+.de-toggle{position:fixed;bottom:46px;right:14px;background:linear-gradient(135deg,#1565c0,#0d47a1);color:#fff;border:none;border-radius:50px;padding:13px 20px;min-height:46px;font-size:15px;font-weight:700;letter-spacing:0.5px;cursor:pointer;box-shadow:0 4px 12px rgba(21,101,192,0.4);z-index:100;display:flex;align-items:center;gap:6px;transition:all 0.2s}
 .de-toggle:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(21,101,192,0.5)}
 .de-toggle.active{background:linear-gradient(135deg,#c62828,#8e0000)}
 .de-overlay{display:none;position:fixed;inset:0;background:rgba(20,30,40,0.85);z-index:200;overflow-y:auto;padding:20px}
 .de-overlay.open{display:block}
 .de-panel{max-width:900px;margin:0 auto;background:var(--panel);border-radius:12px;padding:24px;box-shadow:0 10px 40px rgba(0,0,0,0.4)}
 .de-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid var(--blue)}
-.de-title{font-size:18px;font-weight:700;color:var(--blue);letter-spacing:0.3px}
-.de-subtitle{font-size:11px;color:var(--text-2);margin-top:2px}
-.de-close{background:transparent;border:1px solid var(--border);border-radius:6px;padding:6px 12px;cursor:pointer;font-size:12px;color:var(--text-2)}
+.de-title{font-size:21px;font-weight:700;color:var(--blue);letter-spacing:0.3px}
+.de-subtitle{font-size:13px;color:var(--text-2);margin-top:2px}
+.de-close{background:transparent;border:1px solid var(--border);border-radius:6px;padding:6px 12px;cursor:pointer;font-size:14px;color:var(--text-2)}
 .de-close:hover{background:var(--red-bg);color:var(--red);border-color:var(--red)}
 .de-section{margin-bottom:18px}
-.de-section-label{font-size:11px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
-.de-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
-.de-input{padding:9px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;background:var(--panel-2);color:var(--text);width:100%;font-family:inherit}
+.de-section-label{font-size:13px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
+.de-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.de-input{padding:9px 10px;border:1px solid var(--border);border-radius:6px;font-size:15px;background:var(--panel-2);color:var(--text);width:100%;font-family:inherit}
 .de-input:focus{outline:none;border-color:var(--blue);background:#fff}
-.de-select{padding:9px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;background:var(--panel-2);color:var(--text);width:100%;cursor:pointer}
+.de-select{padding:9px 10px;border:1px solid var(--border);border-radius:6px;font-size:15px;background:var(--panel-2);color:var(--text);width:100%;cursor:pointer}
 .de-radio-grp{display:flex;gap:6px;flex-wrap:wrap}
-.de-radio{flex:1;min-width:80px;padding:9px;border:1px solid var(--border);border-radius:6px;background:var(--panel-2);text-align:center;cursor:pointer;font-size:12px;font-weight:600;color:var(--text-2);transition:all 0.15s}
+.de-radio{flex:1;min-width:80px;padding:9px;border:1px solid var(--border);border-radius:6px;background:var(--panel-2);text-align:center;cursor:pointer;font-size:14px;font-weight:600;color:var(--text-2);transition:all 0.15s}
 .de-radio.selected{background:var(--blue);color:#fff;border-color:var(--blue)}
-.de-checks{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:6px}
-.de-check{display:flex;align-items:center;gap:6px;padding:7px 9px;border:1px solid var(--border);border-radius:5px;background:var(--panel-2);cursor:pointer;font-size:11px;color:var(--text)}
+.de-checks{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:6px;align-items:stretch}
+.de-check{display:flex;align-items:center;gap:8px;padding:9px 10px;min-height:44px;border:1px solid var(--border);border-radius:5px;background:var(--panel-2);cursor:pointer;font-size:14px;line-height:1.3;color:var(--text)}
+.de-check input{flex:0 0 auto;width:17px;height:17px}
+.de-check span,.de-check{overflow-wrap:break-word}
 .de-check input{margin:0}
 .de-check.checked{background:var(--blue-bg);border-color:var(--blue);color:var(--blue)}
-.de-action-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--blue),#0d47a1);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;letter-spacing:0.5px;cursor:pointer;margin-top:6px}
+.de-action-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--blue),#0d47a1);color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:700;letter-spacing:0.5px;cursor:pointer;margin-top:6px}
 .de-action-btn:hover{filter:brightness(1.1)}
 .de-output{margin-top:18px;padding:14px;background:var(--panel-2);border-radius:8px;border:1px solid var(--border);min-height:100px}
 .de-output-empty{color:var(--text-3);font-style:italic;text-align:center;padding:30px 10px}
-.de-rec{padding:10px 12px;background:#fff;border-left:4px solid var(--blue);border-radius:6px;margin-bottom:8px;font-size:12px}
-.de-rec-time{font-size:10px;font-weight:700;color:var(--blue);letter-spacing:0.5px;margin-bottom:4px;text-transform:uppercase}
+.de-rec{padding:10px 12px;background:#fff;border-left:4px solid var(--blue);border-radius:6px;margin-bottom:8px;font-size:14px}
+.de-rec-time{font-size:12px;font-weight:700;color:var(--blue);letter-spacing:0.5px;margin-bottom:4px;text-transform:uppercase}
 .de-rec-action{font-weight:600;color:var(--text);margin-bottom:3px}
-.de-rec-detail{font-size:11px;color:var(--text-2);line-height:1.5}
-.de-rec-cite{font-size:10px;color:#1b6e3a;margin-top:5px;font-style:italic}
+.de-rec-detail{font-size:13px;color:var(--text-2);line-height:1.5}
+.de-rec-cite{font-size:12px;color:#1b6e3a;margin-top:5px;font-style:italic}
 .de-rec-warning{background:#fdecea;border-left-color:var(--red)}
 .de-rec-pfc{background:#fff3e0;border-left-color:var(--orange)}
-.de-disclaimer{margin-top:14px;padding:10px;background:#fff8e1;border:1px solid #7a5f00;border-radius:6px;font-size:10px;color:#5a4500;line-height:1.6}
+.de-disclaimer{margin-top:14px;padding:10px;background:#fff8e1;border:1px solid #7a5f00;border-radius:6px;font-size:12px;color:#5a4500;line-height:1.6}
+
+/* ============ RESPONSIVE (must stay last so it wins the cascade) ============ */
+@media (max-width: 1100px) {
+  .layout { grid-template-columns: 220px 1fr; }
+  .right-panel { display: none; }
+}
+@media (max-width: 800px) {
+  .layout { grid-template-columns: 1fr; }
+  .left-panel { display: none; }
+}
+@media (max-width: 720px) {
+  body { overflow-x: hidden; }
+  .header {
+    height: auto;
+    min-height: 54px;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 8px 12px;
+  }
+  .header .breadcrumb,
+  .header .divider { display: none; }
+  .header .status-group { gap: 10px; flex-wrap: wrap; font-size: 12px; }
+  .header .spacer { display: none; }
+  .query-bar { flex-wrap: wrap; gap: 8px; }
+  .query-modes { order: 2; width: 100%; }
+  .query-input { flex: 1 1 100%; order: 1; }
+  .query-btn { order: 3; flex: 1 1 auto; }
+  .footer {
+    height: auto;
+    min-height: 34px;
+    flex-wrap: wrap;
+    gap: 4px 14px;
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  .footer .copyright { flex: 1 1 100%; text-align: left; white-space: normal; }
+  .de-toggle { bottom: 12px; right: 12px; }
+}
 </style>
 </head>
 <body>
@@ -777,7 +824,7 @@ body {
       <span class="icon-box">SM</span>
       SILENT MEDIC
     </div>
-    <div class="boot-sub">Offline Clinical Decision Support · v0.4.2</div>
+    <div class="boot-sub">Offline Clinical Decision Support · v0.4.3</div>
     <div class="boot-log" id="bootLog"></div>
     <div class="boot-progress"><div id="bootBar"></div></div>
     <button class="boot-btn" id="bootBtn" disabled onclick="startSession()">Initializing…</button>
@@ -817,7 +864,7 @@ body {
     <div class="panel-section" style="flex: 1; overflow-y: auto;">
       <div class="section-header">
         Drug Categories
-        <span class="count" id="catTotal">118</span>
+        <span class="count" id="catTotal">119</span>
       </div>
       <div class="section-body" id="catList">
         <!-- populated dynamically -->
@@ -825,7 +872,7 @@ body {
     </div>
     <div class="panel-section">
       <div class="section-header">Session</div>
-      <div style="padding: 8px 14px; font-size: 11px; color: var(--text-3);">
+      <div style="padding: 8px 14px; font-size: 13px; color: var(--text-3);">
         <div>Queries: <span id="queryCount" style="color: var(--text); font-weight: 600;">0</span></div>
         <div style="margin-top: 3px;">Avg response: <span id="avgResponse" style="color: var(--text); font-weight: 600;">— ms</span></div>
       </div>
@@ -853,7 +900,7 @@ body {
     <div class="results" id="results">
       <div class="empty-state" id="emptyState">
         <h3>TCCC-RX Knowledge Base Loaded</h3>
-        <p>118 drugs · 433 dual-use mappings · 9 categories</p>
+        <p>119 drugs · 443 dual-use mappings · 9 categories</p>
         <p style="margin-top: 12px;">All inference performed locally. No external network calls.</p>
         <div class="examples">
           <div class="ex" onclick="presetQuery('TXA hemorrhage')">TXA hemorrhage</div>
@@ -872,8 +919,8 @@ body {
       <div class="kv"><span class="kv-label">Runtime</span><span class="kv-value" id="runtimeLabel">—</span></div>
       <div class="kv"><span class="kv-label">Knowledge Base</span><span class="kv-value">TCCC-RX v1.0</span></div>
       <div class="kv"><span class="kv-label">Chunks Indexed</span><span class="kv-value mono" id="chunkCount">—</span></div>
-      <div class="kv"><span class="kv-label">Drugs</span><span class="kv-value mono">118</span></div>
-      <div class="kv"><span class="kv-label">Dual-Use Maps</span><span class="kv-value mono">433</span></div>
+      <div class="kv"><span class="kv-label">Drugs</span><span class="kv-value mono">119</span></div>
+      <div class="kv"><span class="kv-label">Dual-Use Maps</span><span class="kv-value mono">443</span></div>
       <div class="kv"><span class="kv-label">Network</span><span class="kv-value" id="netStateLabel">—</span></div>
       <div class="kv"><span class="kv-label">Data Transmission</span><span class="kv-value ok">NONE</span></div>
     </div>
@@ -886,7 +933,7 @@ body {
     </div>
     <div class="panel-section">
       <div class="section-header">Quick Reference</div>
-      <div style="padding: 10px 14px; font-size: 11px; color: var(--text-2); line-height: 1.5;">
+      <div style="padding: 10px 14px; font-size: 13px; color: var(--text-2); line-height: 1.5;">
         <div><strong style="color:var(--r12)">R1/2</strong> — Role 1/2: point of injury to forward surgical</div>
         <div style="margin-top: 4px;"><strong style="color:var(--pfc)">PFC</strong> — Prolonged Field Care (austere, evacuation delayed)</div>
         <div style="margin-top: 4px;"><strong style="color:var(--ccatt)">CCATT</strong> — Critical Care Air Transport Team</div>
@@ -896,8 +943,8 @@ body {
 </div>
 <!-- FOOTER -->
 <div class="footer">
-  <div class="footer-item" style="font-weight:700;">SILENT MEDIC v0.4.2 · BUILD 2026-05-15</div>
-  <div class="footer-item">TCCC-RX · 119 drugs · TCCC 2026 aligned</div>
+  <div class="footer-item" style="font-weight:700;">SILENT MEDIC v0.4.3 · BUILD 2026-08-20</div>
+  <div class="footer-item">TCCC-RX · 119 drugs · 443 dual-use maps</div>
   <div class="footer-item" id="footerKB">—</div>
   <div class="spacer"></div>
   <div class="copyright">© 2026 Jae H. Choi, MSc, PhD, DVSc — Prototype, not for clinical use without validation</div>
@@ -1015,7 +1062,7 @@ function startSession() {
   document.getElementById('netStateLabel').textContent = navigator.onLine ? 'Present (unused)' : 'Denied';
   document.getElementById('netStateLabel').className = 'kv-value ' + (navigator.onLine ? 'warn' : 'ok');
   document.getElementById('kbDot').className = 'dot ok';
-  document.getElementById('kbLabel').textContent = 'KB: 120 drugs';
+  document.getElementById('kbLabel').textContent = 'KB: 119 drugs';
   // Integrity badge
   const ib = document.getElementById('integrityBadge');
   if (ib) {
@@ -1227,7 +1274,7 @@ function renderRecent() {
            '</li>';
   }).join('');
   if (state.recent.length > 12) {
-    list.innerHTML += '<li style="color:var(--text-3);cursor:default;font-size:10px;text-align:center;">+ ' + (state.recent.length - 12) + ' older queries stored</li>';
+    list.innerHTML += '<li style="color:var(--text-3);cursor:default;font-size:12px;text-align:center;">+ ' + (state.recent.length - 12) + ' older queries stored</li>';
   }
 }
 // ---------------- QUERY HISTORY PERSISTENCE ----------------
@@ -1521,7 +1568,7 @@ boot();
 <script>
 // ═══════════════════════════════════════════
 // DECISION SUPPORT ENGINE — TCCC 2026 grounded
-// Offline rule-base · no AI calls · v0.4.2
+// Offline rule-base · no AI calls · v0.4.3
 // ═══════════════════════════════════════════
 function toggleDecisionEngine(){
   const ov=document.getElementById('deOverlay');
@@ -1711,7 +1758,7 @@ function generateDecisionPlan(){
     out.innerHTML='<div class="de-output-empty">No actions triggered by current inputs. Please complete: mechanism of injury, suspected injuries (at least one), and echelon. Then press GENERATE.</div>';
     return;
   }
-  out.innerHTML=`<div style="font-size:12px;font-weight:700;color:var(--blue);margin-bottom:10px;letter-spacing:0.3px;">▶ TCCC 2026 ACTION SEQUENCE — ${recs.length} RECOMMENDATIONS</div>`+
+  out.innerHTML=`<div style="font-size:14px;font-weight:700;color:var(--blue);margin-bottom:10px;letter-spacing:0.3px;">▶ TCCC 2026 ACTION SEQUENCE — ${recs.length} RECOMMENDATIONS</div>`+
     recs.map(r=>`<div class="de-rec ${r.class||''}">
       <div class="de-rec-time">${r.time}</div>
       <div class="de-rec-action">${r.action}</div>

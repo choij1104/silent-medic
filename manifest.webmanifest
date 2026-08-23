@@ -1,0 +1,16 @@
+{
+  "name": "SILENT MEDIC — Offline Clinical Decision Support",
+  "short_name": "SILENT MEDIC",
+  "description": "Offline clinical decision support for prolonged field care. TCCC-RX knowledge base and a deterministic, citation-linked rule engine. No network calls, no data transmission.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f4f6f9",
+  "theme_color": "#0d47a1",
+  "icons": [
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

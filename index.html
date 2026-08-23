@@ -3,15 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="theme-color" content="#1565c0">
-<title>SILENT MEDIC v0.4.5 — Offline Clinical Decision Support</title>
+<meta name="theme-color" content="#0d47a1">
+<meta name="description" content="Offline clinical decision support for prolonged field care. TCCC-RX knowledge base with a deterministic, citation-linked rule engine. No network calls, no data transmission.">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="SILENT MEDIC">
+<title>SILENT MEDIC v0.5.0 — Offline Clinical Decision Support</title>
 <!--
-  SILENT MEDIC v0.4.5 — Offline Clinical Decision Support for Prolonged Field Care
+  SILENT MEDIC v0.5.0 — Offline Clinical Decision Support for Prolonged Field Care
   © 2026 Jae H. Choi, MSc, PhD, DVSc
   Knowledge base: TCCC-RX (117 drugs · 438 dual-use mappings · 9 categories)
   Runtime: Browser-resident; no data transmitted.
 
   VERSION HISTORY
+  v0.5.0  2026-08-23  Handoff, accessibility, and install.
+                      · Decision engine: a depressed GCS no longer counts as head injury on
+                        its own. The TBI targets and ketamine analgesia rules now require a
+                        trauma mechanism or an explicit TBI selection, so a nerve-agent,
+                        opioid, hypoglycaemic or heat-stroke casualty is no longer told to
+                        treat a head injury. Antibiotic route selection still reads GCS as a
+                        proxy for "unable to take PO", which is correct regardless of cause.
+                      · Output can leave the screen: Copy puts a plain-text action sequence on
+                        the clipboard (with a textarea fallback for file://), Print produces a
+                        clean sheet with only the plan. Both carry a timestamp, the casualty
+                        summary, the inputs used, every citation, and the disclaimer.
+                      · Keyboard: visible focus rings throughout, Escape closes the decision
+                        panel, Tab is trapped inside it while open and focus returns to the
+                        launcher on close, and the custom radio chips are focusable and
+                        operable with Enter/Space with correct radiogroup semantics.
+                      · Installable: manifest, icons, and a service worker that caches only
+                        this app's own files, so it can be added to a phone home screen and
+                        opened with the radio off. Registration is skipped on file:// where a
+                        single index.html is already fully offline.
   v0.4.5  2026-08-20  Knowledge base de-duplicated. "Sodium Bicarbonate" and "Sodium
                       Bicarbonate (NaHCO3)" were two records for one drug; so were
                       "Naloxone (Narcan)" (filed under airway) and "Naloxone (Narcan) —
@@ -797,6 +822,38 @@ body {
 .de-rec-pfc{background:#fff3e0;border-left-color:var(--orange)}
 .de-disclaimer{margin-top:14px;padding:10px;background:#fff8e1;border:1px solid #7a5f00;border-radius:6px;font-size:12px;color:#5a4500;line-height:1.6}
 
+/* ---- decision output header, handoff tools, print ---- */
+.de-out-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.de-out-title{font-size:14px;font-weight:700;color:var(--blue);letter-spacing:0.3px}
+.de-out-tools{display:flex;gap:8px}
+.de-tool-btn{min-height:36px;padding:7px 14px;font-size:13px;font-weight:600;color:var(--blue);
+  background:var(--panel);border:1px solid var(--border-2);border-radius:6px;cursor:pointer}
+.de-tool-btn:hover{background:var(--blue-bg)}
+.de-tool-btn:disabled{opacity:0.7;cursor:default}
+.de-out-meta{font-size:12px;color:var(--text-2);line-height:1.6;padding:10px 12px;margin-bottom:12px;
+  background:var(--panel-3);border:1px solid var(--border-3);border-radius:6px}
+.de-out-foot{margin-top:14px;padding-top:10px;border-top:1px solid var(--border);
+  font-size:12px;color:var(--text-3);font-style:italic}
+
+/* ---- visible keyboard focus everywhere ---- */
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:3px}
+.header :focus-visible,.footer :focus-visible{outline-color:#fff}
+.de-radio:focus-visible,.de-check:focus-within{outline:3px solid var(--blue);outline-offset:2px}
+
+@media print{
+  body{height:auto;overflow:visible;background:#fff;display:block}
+  .header,.footer,.layout,.de-toggle,.de-out-tools,.de-close,.de-action-btn,
+  .de-section,.de-disclaimer{display:none !important}
+  .de-overlay{display:block !important;position:static;background:#fff;padding:0;overflow:visible}
+  .de-panel{max-width:none;margin:0;padding:0;box-shadow:none;border-radius:0}
+  .de-header{display:block;margin-bottom:8px;border-bottom:1px solid #999}
+  .de-output{margin:0;padding:0;border:none;background:#fff;min-height:0}
+  .de-out-head{margin-bottom:6px}
+  .de-rec{break-inside:avoid;page-break-inside:avoid}
+  .de-out-meta{background:#fff;border:1px solid #999}
+  a[href]:after{content:''}
+}
+
 /* ============ RESPONSIVE (must stay last so it wins the cascade) ============ */
 @media (max-width: 1100px) {
   .layout { grid-template-columns: 220px 1fr; }
@@ -844,7 +901,7 @@ body {
       <span class="icon-box">SM</span>
       SILENT MEDIC
     </div>
-    <div class="boot-sub">Offline Clinical Decision Support · v0.4.5</div>
+    <div class="boot-sub">Offline Clinical Decision Support · v0.5.0</div>
     <div class="boot-log" id="bootLog"></div>
     <div class="boot-progress"><div id="bootBar"></div></div>
     <button class="boot-btn" id="bootBtn" disabled onclick="startSession()">Initializing…</button>
@@ -963,7 +1020,7 @@ body {
 </div>
 <!-- FOOTER -->
 <div class="footer">
-  <div class="footer-item" style="font-weight:700;">SILENT MEDIC v0.4.5 · BUILD 2026-08-20</div>
+  <div class="footer-item" style="font-weight:700;">SILENT MEDIC v0.5.0 · BUILD 2026-08-20</div>
   <div class="footer-item">TCCC-RX · 117 drugs · 438 dual-use maps</div>
   <div class="footer-item" id="footerKB">—</div>
   <div class="spacer"></div>
@@ -978,6 +1035,7 @@ body {
 'use strict';
 // ---------------- STATE ----------------
 const state = {
+  lastPlan: null,
   ready: false,
   runtime: null,
   kb: [],
@@ -1005,6 +1063,7 @@ function setProgress(p) { bootBar.style.width = p + '%'; }
 // Expected SHA-256 of the decompressed KB JSON (computed at build time).
 // If the runtime hash differs, the data may be corrupted — surface a warning
 // in the UI rather than blocking the tool outright.
+const APP_VERSION = 'v0.5.0';
 const KB_EXPECTED_SHA256 = 'd0b53956530cf2f5f32290e430a038bbe2f7dec1d98021a9b7456b2da26595ae';
 async function decompressKB() {
   const b64 = document.getElementById('kbData').textContent.trim();
@@ -1473,6 +1532,17 @@ setInterval(updateClock, 1000);
 updateClock();
 // ---------------- UTIL ----------------
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+// ---------------- OFFLINE INSTALL ----------------
+// Registering a service worker makes the app installable to a phone home screen and
+// openable with the radio off. It only applies when the app is served over http(s) —
+// a single index.html opened from disk (file://) already works offline and is left alone.
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {
+      /* no service worker: the app still runs, it just is not installable */
+    });
+  });
+}
 // ---------------- KICKOFF ----------------
 boot();
 </script>
@@ -1484,11 +1554,11 @@ boot();
 <button class="de-toggle" id="deToggle" onclick="toggleDecisionEngine()">
   🎯 DECISION SUPPORT
 </button>
-<div class="de-overlay" id="deOverlay">
+<div class="de-overlay" id="deOverlay" role="dialog" aria-modal="true" aria-labelledby="deDialogTitle" aria-hidden="true">
   <div class="de-panel">
     <div class="de-header">
       <div>
-        <div class="de-title">🎯 DECISION SUPPORT MODE</div>
+        <div class="de-title" id="deDialogTitle">🎯 DECISION SUPPORT MODE</div>
         <div class="de-subtitle">TCCC 2026 / JTS-grounded action sequence generator</div>
       </div>
       <button class="de-close" onclick="toggleDecisionEngine()">✕ CLOSE</button>
@@ -1512,13 +1582,13 @@ boot();
     </div>
     <div class="de-section">
       <div class="de-section-label">▸ Mechanism of Injury</div>
-      <div class="de-radio-grp" id="deMech">
-        <div class="de-radio" data-val="gsw">GSW / Penetrating</div>
-        <div class="de-radio" data-val="blast">Blast / IED</div>
-        <div class="de-radio" data-val="blunt">Blunt / Crush</div>
-        <div class="de-radio" data-val="burn">Burn / Inhalation</div>
-        <div class="de-radio" data-val="cbrn">CBRN / Toxin</div>
-        <div class="de-radio" data-val="environmental">Environmental</div>
+      <div class="de-radio-grp" role="radiogroup" id="deMech">
+        <div class="de-radio" role="radio" tabindex="0" aria-checked="false" data-val="gsw">GSW / Penetrating</div>
+        <div class="de-radio" role="radio" tabindex="0" aria-checked="false" data-val="blast">Blast / IED</div>
+        <div class="de-radio" role="radio" tabindex="0" aria-checked="false" data-val="blunt">Blunt / Crush</div>
+        <div class="de-radio" role="radio" tabindex="0" aria-checked="false" data-val="burn">Burn / Inhalation</div>
+        <div class="de-radio" role="radio" tabindex="0" aria-checked="false" data-val="cbrn">CBRN / Toxin</div>
+        <div class="de-radio" role="radio" tabindex="0" aria-checked="false" data-val="environmental">Environmental</div>
       </div>
     </div>
     <div class="de-section">
@@ -1565,17 +1635,17 @@ boot();
     </div>
     <div class="de-section">
       <div class="de-section-label">▸ Echelon &amp; Evacuation</div>
-      <div class="de-radio-grp" id="deEchelon" style="margin-bottom:8px">
-        <div class="de-radio" data-val="cuf">Care Under Fire</div>
-        <div class="de-radio" data-val="tfc">Tactical Field Care</div>
-        <div class="de-radio" data-val="tacevac">TACEVAC</div>
-        <div class="de-radio" data-val="pcc">PCC / PFC</div>
+      <div class="de-radio-grp" role="radiogroup" id="deEchelon" style="margin-bottom:8px">
+        <div class="de-radio" role="radio" tabindex="0" aria-checked="false" data-val="cuf">Care Under Fire</div>
+        <div class="de-radio" role="radio" tabindex="0" aria-checked="false" data-val="tfc">Tactical Field Care</div>
+        <div class="de-radio" role="radio" tabindex="0" aria-checked="false" data-val="tacevac">TACEVAC</div>
+        <div class="de-radio" role="radio" tabindex="0" aria-checked="false" data-val="pcc">PCC / PFC</div>
       </div>
-      <div class="de-radio-grp" id="deEvac">
-        <div class="de-radio" data-val="0.5">≤30 min</div>
-        <div class="de-radio" data-val="2">≤2 hr</div>
-        <div class="de-radio" data-val="6">≤6 hr</div>
-        <div class="de-radio" data-val="24">PFC ≥24 hr</div>
+      <div class="de-radio-grp" role="radiogroup" id="deEvac">
+        <div class="de-radio" role="radio" tabindex="0" aria-checked="false" data-val="0.5">≤30 min</div>
+        <div class="de-radio" role="radio" tabindex="0" aria-checked="false" data-val="2">≤2 hr</div>
+        <div class="de-radio" role="radio" tabindex="0" aria-checked="false" data-val="6">≤6 hr</div>
+        <div class="de-radio" role="radio" tabindex="0" aria-checked="false" data-val="24">PFC ≥24 hr</div>
       </div>
     </div>
     <div class="de-section">
@@ -1625,20 +1695,59 @@ boot();
 <script>
 // ═══════════════════════════════════════════
 // DECISION SUPPORT ENGINE — TCCC 2026 grounded
-// Offline rule-base · no AI calls · v0.4.5
+// Offline rule-base · no AI calls · v0.5.0
 // ═══════════════════════════════════════════
+let deLastFocus=null;
+function deFocusables(ov){
+  return [...ov.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])')]
+    .filter(el=>!el.disabled&&el.offsetParent!==null);
+}
 function toggleDecisionEngine(){
   const ov=document.getElementById('deOverlay');
   const btn=document.getElementById('deToggle');
-  if(ov.classList.contains('open')){ov.classList.remove('open');btn.classList.remove('active');btn.textContent='🎯 DECISION SUPPORT';}
-  else{ov.classList.add('open');btn.classList.add('active');btn.textContent='✕ CLOSE PANEL';}
+  if(ov.classList.contains('open')){
+    ov.classList.remove('open');
+    ov.setAttribute('aria-hidden','true');
+    btn.classList.remove('active');
+    btn.textContent='🎯 DECISION SUPPORT';
+    btn.setAttribute('aria-expanded','false');
+    if(deLastFocus&&deLastFocus.focus) deLastFocus.focus();
+  } else {
+    deLastFocus=document.activeElement;
+    ov.classList.add('open');
+    ov.setAttribute('aria-hidden','false');
+    btn.classList.add('active');
+    btn.textContent='✕ CLOSE PANEL';
+    btn.setAttribute('aria-expanded','true');
+    const f=deFocusables(ov);
+    if(f.length) f[0].focus();
+  }
 }
+// Escape closes the panel; Tab is trapped inside it while open
+document.addEventListener('keydown',function(e){
+  const ov=document.getElementById('deOverlay');
+  if(!ov||!ov.classList.contains('open')) return;
+  if(e.key==='Escape'){ e.preventDefault(); toggleDecisionEngine(); return; }
+  if(e.key!=='Tab') return;
+  const f=deFocusables(ov);
+  if(!f.length) return;
+  const first=f[0],last=f[f.length-1];
+  if(e.shiftKey&&document.activeElement===first){ e.preventDefault(); last.focus(); }
+  else if(!e.shiftKey&&document.activeElement===last){ e.preventDefault(); first.focus(); }
+});
+// The custom radio chips are divs — make them reachable and operable from the keyboard
+document.addEventListener('keydown',function(e){
+  const r=e.target.closest&&e.target.closest('.de-radio');
+  if(!r) return;
+  if(e.key===' '||e.key==='Enter'){ e.preventDefault(); r.click(); }
+});
 // Radio toggle behavior
 document.addEventListener('click',function(e){
   const r=e.target.closest('.de-radio');
   if(r&&r.parentElement.id&&r.parentElement.id.startsWith('de')){
-    [...r.parentElement.children].forEach(c=>c.classList.remove('selected'));
+    [...r.parentElement.children].forEach(c=>{c.classList.remove('selected');c.setAttribute('aria-checked','false');});
     r.classList.add('selected');
+    r.setAttribute('aria-checked','true');
   }
 });
 // Checkbox visual sync
@@ -1676,6 +1785,11 @@ function generateDecisionPlan(){
   const inj=k=>I.injuries.includes(k);
   const tox=k=>I.toxidrome.includes(k);
   const met=k=>I.metabolic.includes(k);
+  // A depressed GCS is not by itself evidence of head injury — a toxidrome, hypoglycaemia or
+  // heat stroke will do the same. Rules that read low GCS as TBI require a trauma mechanism
+  // or an explicit TBI selection before they fire.
+  const traumaMech=['gsw','blast','blunt','burn'].includes(I.mech);
+  const traumaticInjury=I.injuries.length>0;
   // === MASSIVE HEMORRHAGE (TCCC 2026 Section 3) ===
   if(inj('hemorrhage_extremity')||inj('amputation')){
     recs.push({time:'IMMEDIATE',action:'Apply CoTCCC limb tourniquet — directly to skin, 2-3 inches above bleeding site',
@@ -1716,7 +1830,7 @@ function generateDecisionPlan(){
       cite:'TCCC 2026, TFC §5.a — Tension Pneumothorax'});
   }
   // === TBI (TCCC 2026 Section 8 — UPDATED 2026) ===
-  if(inj('tbi')||(I.gcs!==null&&I.gcs<13)){
+  if(inj('tbi')||(I.gcs!==null&&I.gcs<13&&traumaMech)){
     recs.push({time:'CONTINUOUS',action:'Target SpO2 ≥92%, SBP >100 mmHg',
       detail:'TCCC 2026: moderate/severe TBI = unable to follow simple commands beyond 10 min post-injury. Evacuate to neurosurgical capability — outcomes improved with surgical intervention within 5 hr of injury.',
       cite:'TCCC 2026, TFC §8.b — TBI Targets'});
@@ -1768,8 +1882,8 @@ function generateDecisionPlan(){
       class:(!has('ceftriaxone')&&!has('cefadroxil'))?'de-rec-warning':''});
   }
   // === ANALGESIA (TCCC 2026 Section 11 — CWMP UPDATED) ===
-  if(I.gcs===null||I.gcs>=14){
-    if(has('cwmp')){
+  if((I.gcs===null||I.gcs>=14)||!(traumaMech||traumaticInjury)){
+    if(has('cwmp')&&(traumaMech||traumaticInjury)){
       recs.push({time:'IF MISSION-CAPABLE',action:'CWMP: APAP 1000-1300 mg PO q8h + Meloxicam 15 mg PO daily + Suzetrigine 100 mg load then 50 mg q12h',
         detail:'TCCC 2026 NEW: Suzetrigine added (Nav1.8 inhibitor, non-opioid). Self-administered or co-administered.',
         cite:'TCCC 2026, TFC §11.a — CWMP (NEW 2026)'});
@@ -1962,14 +2076,87 @@ function generateDecisionPlan(){
     out.innerHTML='<div class="de-output-empty">No actions triggered by current inputs. Please complete: mechanism of injury, suspected injuries (at least one), and echelon. Then press GENERATE.</div>';
     return;
   }
-  out.innerHTML=`<div style="font-size:14px;font-weight:700;color:var(--blue);margin-bottom:10px;letter-spacing:0.3px;">▶ TCCC 2026 ACTION SEQUENCE — ${recs.length} RECOMMENDATIONS</div>`+
+  const now=new Date();
+  const stamp=now.toISOString().slice(0,16).replace('T',' ')+'Z';
+  const bits=[];
+  if(I.age) bits.push(I.age+' yr');
+  if(I.sex) bits.push(I.sex);
+  if(I.wt) bits.push(I.wt+' kg');
+  if(I.sbp) bits.push('SBP '+I.sbp);
+  if(I.hr) bits.push('HR '+I.hr);
+  if(I.spo2) bits.push('SpO2 '+I.spo2+'%');
+  if(I.gcs) bits.push('GCS '+I.gcs);
+  if(I.rr) bits.push('RR '+I.rr);
+  const label=v=>String(v).replace(/_/g,' ');
+  const ctx=[];
+  if(I.mech) ctx.push('Mechanism: '+label(I.mech));
+  if(I.injuries.length) ctx.push('Injuries: '+I.injuries.map(label).join(', '));
+  if(I.toxidrome.length) ctx.push('Toxidrome: '+I.toxidrome.map(label).join(', '));
+  if(I.metabolic.length) ctx.push('Metabolic: '+I.metabolic.map(label).join(', '));
+  if(I.echelon) ctx.push('Echelon: '+label(I.echelon).toUpperCase());
+  if(I.evacHr) ctx.push('Evac: '+I.evacHr+' hr');
+  state.lastPlan={recs,stamp,vitals:bits.join(' · '),ctx,count:recs.length};
+
+  out.innerHTML=`<div class="de-out-head">
+      <div class="de-out-title">▶ TCCC 2026 ACTION SEQUENCE — ${recs.length} RECOMMENDATIONS</div>
+      <div class="de-out-tools">
+        <button type="button" class="de-tool-btn" onclick="copyDecisionPlan(this)">Copy</button>
+        <button type="button" class="de-tool-btn" onclick="window.print()">Print</button>
+      </div>
+    </div>
+    <div class="de-out-meta">
+      <div><strong>Generated</strong> ${stamp} · SILENT MEDIC ${APP_VERSION} · offline rule base</div>
+      ${bits.length?`<div><strong>Casualty</strong> ${bits.join(' · ')}</div>`:''}
+      ${ctx.length?`<div><strong>Inputs</strong> ${ctx.join(' · ')}</div>`:''}
+    </div>`+
     recs.map(r=>`<div class="de-rec ${r.class||''}">
       <div class="de-rec-time">${r.time}</div>
       <div class="de-rec-action">${r.action}</div>
       <div class="de-rec-detail">${r.detail}</div>
       ${r.warn?`<div class="de-rec-detail" style="color:var(--red);font-weight:600;margin-top:4px;">${r.warn}</div>`:''}
       <div class="de-rec-cite">📖 ${r.cite}</div>
-    </div>`).join('');
+    </div>`).join('')+
+    `<div class="de-out-foot">Reference aid only — not a substitute for provider judgment. Verify against current guidelines and local medical direction before acting.</div>`;
+}
+// ---------- plain-text rendering for handoff ----------
+function decisionPlanText(){
+  const p=state.lastPlan;
+  if(!p) return '';
+  const L=[];
+  L.push('SILENT MEDIC '+APP_VERSION+' — TCCC 2026 ACTION SEQUENCE');
+  L.push('Generated: '+p.stamp+' · offline rule base, no network');
+  if(p.vitals) L.push('Casualty: '+p.vitals);
+  p.ctx.forEach(c=>L.push(c));
+  L.push('');
+  p.recs.forEach((r,i)=>{
+    L.push(`${i+1}. [${r.time}] ${r.action}`);
+    if(r.detail) L.push('   '+r.detail);
+    if(r.warn) L.push('   ! '+r.warn.replace(/^⚠\s*/,''));
+    L.push('   Source: '+r.cite);
+    L.push('');
+  });
+  L.push('Reference aid only — not a substitute for provider judgment.');
+  L.push('Verify against current guidelines and local medical direction before acting.');
+  return L.join('\n');
+}
+async function copyDecisionPlan(btn){
+  const txt=decisionPlanText();
+  if(!txt) return;
+  const done=ok=>{const o=btn.textContent;btn.textContent=ok?'Copied':'Copy failed';btn.disabled=true;
+    setTimeout(()=>{btn.textContent=o;btn.disabled=false;},1600);};
+  try{
+    await navigator.clipboard.writeText(txt);
+    done(true);
+  }catch(e){
+    // clipboard API is unavailable on file:// in some browsers — fall back to a selectable textarea
+    const ta=document.createElement('textarea');
+    ta.value=txt; ta.setAttribute('readonly','');
+    ta.style.cssText='position:fixed;top:0;left:0;opacity:0;';
+    document.body.appendChild(ta); ta.select();
+    let ok=false; try{ ok=document.execCommand('copy'); }catch(_){}
+    document.body.removeChild(ta);
+    done(ok);
+  }
 }
 </script>
 </body>

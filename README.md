@@ -1,7 +1,7 @@
 # SILENT MEDIC
 
 **Offline clinical decision support for prolonged field care.**
-Version 0.4.5 · Build 2026-08-20
+Version 0.5.0 · Build 2026-08-23
 
 A single-file, browser-resident decision support tool for combat casualty care and
 prolonged field care (PFC) environments. It runs entirely in the browser with no
@@ -37,16 +37,41 @@ Open `index.html` in any modern browser. No install, no build step, no dependenc
 To keep a local copy on a phone or tablet, save the file to device storage and open it
 from the browser's file handler; it will run without a network connection.
 
+**Install to a home screen.** Served over https (including GitHub Pages), the app registers a
+service worker and can be installed like a native app — add it to the home screen and it opens
+with the radio off. The service worker caches only this app's own files and contacts nothing.
+
+**Handing off a plan.** The decision engine's output has Copy and Print actions. Both carry a
+timestamp, the casualty summary, the inputs the plan came from, every citation, and the
+disclaimer, so what leaves the screen is traceable.
+
 ## Repository layout
 
 ```
-index.html      complete application (UI + knowledge base + decision engine)
-README.md       this file
-DISCLAIMER.md   intended use and limitations — read before clinical use
-LICENSE         copyright and terms
+index.html             complete application (UI + knowledge base + decision engine)
+manifest.webmanifest   home-screen install metadata
+sw.js                  service worker — caches this app's own files only
+icon-192.png           app icons
+icon-512.png
+CHANGELOG.md           release history
+README.md              this file
+DISCLAIMER.md          intended use and limitations — read before clinical use
+LICENSE                copyright and terms
 ```
 
+`index.html` remains self-contained: opened on its own from disk it is the complete
+application. The other files only add the installable, served form.
+
 ## Changelog
+
+Full history in [CHANGELOG.md](CHANGELOG.md).
+
+**v0.5.0** — 2026-08-23. A depressed GCS no longer counts as head injury by itself: the TBI and
+ketamine rules now require a trauma mechanism, so toxidrome and metabolic casualties are no
+longer told to treat a head injury. Decision output gained Copy and Print with timestamp,
+casualty summary, inputs, citations, and disclaimer. Full keyboard support — focus rings,
+Escape to close, focus trap and restore, keyboard-operable radio chips, dialog semantics.
+Installable to a phone home screen via manifest and service worker.
 
 **v0.4.5** — 2026-08-20. Knowledge base de-duplicated. Sodium bicarbonate and naloxone each
 existed as two separate drug records with overlapping content and different category and level

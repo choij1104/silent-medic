@@ -1,7 +1,7 @@
 # SILENT MEDIC
 
 **Offline clinical decision support for prolonged field care.**
-Version 0.4.3 · Build 2026-08-20
+Version 0.4.5 · Build 2026-08-20
 
 A single-file, browser-resident decision support tool for combat casualty care and
 prolonged field care (PFC) environments. It runs entirely in the browser with no
@@ -13,8 +13,9 @@ settings where connectivity cannot be assumed.
 ## What it does
 
 - **Query Console** — three retrieval modes: by **Drug**, by **Symptom**, by **Mechanism**
-- **TCCC-RX knowledge base** — 119 drugs, 443 dual-use mappings, 9 categories, aligned to TCCC 2026 (Change 25-1)
-- **Decision Support Module** — generates a time-sequenced action list (MARCH-PAWS ordered) from mechanism of injury, suspected injuries, vitals, echelon of care, and evacuation delay
+- **TCCC-RX knowledge base** — 117 drugs, 438 dual-use mappings, 9 categories, 815 chunks, aligned to TCCC 2026 (Change 25-1)
+- **Decision Support Module** — generates a time-sequenced action list (MARCH-PAWS ordered) from mechanism of injury, suspected injuries, toxidrome, metabolic risk, vitals, echelon of care, and evacuation delay
+- **Toxidrome and electrolyte coverage** — nerve agent and organophosphate, cyanide and closed-space smoke, opioid, methemoglobinemia, sodium-channel and calcium-channel blocker overdose, hydrofluoric acid; crush and post-tourniquet hyperkalemia, transfusion hypocalcemia, hypoglycemia, status epilepticus, heat casualty
 - **Echelon awareness** — recommendations tagged R1/2 (point of injury → forward surgical), PFC (evacuation delayed), and CCATT (critical care air transport)
 - **Local-only operation** — offline rule base, no AI calls, no telemetry; query history stays in browser storage on the device
 - **Citation-linked output** — every recommendation carries its source reference (TCCC 2026 section, JTS PFC guidelines)
@@ -46,6 +47,21 @@ LICENSE         copyright and terms
 ```
 
 ## Changelog
+
+**v0.4.5** — 2026-08-20. Knowledge base de-duplicated. Sodium bicarbonate and naloxone each
+existed as two separate drug records with overlapping content and different category and level
+tags. Each pair was merged into one record carrying the union of both — class, levels,
+mechanism, every warning, and every dual-use mapping; overlapping mappings were combined into a
+single entry containing both texts rather than dropped. Merged naloxone is filed under
+antidotes with its airway keywords retained, and remains reachable by drug, symptom, and
+mechanism search. Counts are now 117 drugs, 438 dual-use mappings, 815 chunks, and the embedded
+SHA-256 integrity hash was updated to match.
+
+**v0.4.4** — 2026-08-20. Decision engine extended to the antidote and electrolyte categories,
+which had knowledge base entries but no rules behind them. Two new input sections (Toxic
+Exposure / Toxidrome, Metabolic & Electrolyte Risk), the corresponding agents added to the kit
+list, and 21 new rules. Every new rule quotes the curated knowledge base entry it came from —
+no new clinical content was authored for this release. Existing rules unchanged.
 
 **v0.4.3** — 2026-08-20. Legibility pass: base type raised from 13px to 15px throughout,
 palette reworked so label and citation text meets WCAG AA (previously 2.2–2.9:1, now

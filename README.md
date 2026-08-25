@@ -1,7 +1,7 @@
 # SILENT MEDIC
 
 **Offline clinical decision support for prolonged field care.**
-Version 0.5.0 · Build 2026-08-23
+Version 0.5.1 · Build 2026-08-25
 
 A single-file, browser-resident decision support tool for combat casualty care and
 prolonged field care (PFC) environments. It runs entirely in the browser with no
@@ -65,6 +65,13 @@ application. The other files only add the installable, served form.
 ## Changelog
 
 Full history in [CHANGELOG.md](CHANGELOG.md).
+
+**v0.5.1** — 2026-08-25. Search ranking: the drug a query is about now comes first. Retrieval
+weights a match in the indication or the drug class far above a match anywhere in the body
+text, adds an exact-phrase bonus when the whole query is the indication, and rewards covering
+every word of the query. Term matching is whole-word. `opioid overdose` returned calcium and
+four opioid-*sparing* analgesics above naloxone; naloxone now ranks first. Ranking only — no
+record, dose, indication, warning, citation, or decision rule changed.
 
 **v0.5.0** — 2026-08-23. A depressed GCS no longer counts as head injury by itself: the TBI and
 ketamine rules now require a trauma mechanism, so toxidrome and metabolic casualties are no

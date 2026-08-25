@@ -7,6 +7,35 @@ The knowledge base is embedded in `index.html` as gzip+base64 and checked at boo
 
 ---
 
+## v0.5.1 — 2026-08-25
+
+### Search ranking
+
+The drug a query is about now comes first. Ranking only — no record, dose, indication,
+warning, citation, or decision rule changed, and the knowledge base hash is unchanged.
+
+- Retrieval now weights **where** a term matched. A hit in the indication (the `Primary use:`
+  line of a drug record, or the label of a dual-use mapping) or in the drug class outscores a
+  hit anywhere in the body text, and an exact-phrase match of the whole query against the
+  indication carries a further bonus.
+- A **coverage** signal rewards records that match every word of the query over records that
+  matched one word several times.
+- Term matching is **whole-word**: `opioid` still matches `opioid-sparing`, but `dose` no
+  longer matches `overdose`.
+
+**What this fixes.** `opioid overdose` returned calcium, lidocaine, ondansetron,
+dexmedetomidine, and promethazine above naloxone — five of them scoring on the phrase
+"opioid-sparing", which is the opposite of the query. Naloxone now ranks first. The same
+correction applies to `cyanide poisoning` → hydroxocobalamin, `methemoglobinemia` →
+methylene blue, `nerve agent` → atropine, and `hyperkalemia` → calcium.
+
+### Regression gate
+
+- 55 → **63 checks**. Six assert the first result for a query whose answer is unambiguous;
+  two assert the word-boundary behaviour.
+
+---
+
 ## v0.5.0 — 2026-08-23
 
 ### Decision engine

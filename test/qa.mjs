@@ -123,6 +123,31 @@ section('Query console');
   ok('bicarbonate resolves to a single record', bicarbHeadings >= 1 && bicarbHeadings <= 2,
      `${bicarbHeadings} headings`);
 
+  // ---- ranking (v0.5.1) ------------------------------------------------
+  // The drug a query is ABOUT must come first. Before field weighting, "opioid
+  // overdose" put calcium and four opioid-sparing analgesics above naloxone.
+  const ranksFirst = async (mode, q, re) => {
+    const r = await page.evaluate(([m, term]) => {
+      setMode(m);
+      return retrieve(term, 5).map(c => c.d);
+    }, [mode, q]);
+    ok(`"${q}" ranks ${re.source} first`, re.test(r[0] || ''), 'got: ' + r.join(' > '));
+  };
+  await ranksFirst('sx', 'opioid overdose', /Naloxone/i);
+  await ranksFirst('sx', 'cyanide poisoning', /Hydroxocobalamin/i);
+  await ranksFirst('sx', 'methemoglobinemia', /Methylene Blue/i);
+  await ranksFirst('sx', 'nerve agent', /Atropine/i);
+  await ranksFirst('sx', 'hyperkalemia', /Calcium/i);
+  await ranksFirst('drug', 'ketamine', /Ketamine/i);
+
+  // whole-word matching: an incidental substring must not score as a term hit
+  const wordBoundary = await page.evaluate(() => ({
+    hyphen: hasWord('opioid-sparing analgesia', 'opioid'),
+    inner:  hasWord('overdose reversal', 'dose'),
+  }));
+  ok('hasWord matches across a hyphen', wordBoundary.hyphen === true);
+  ok('hasWord rejects an inner substring', wordBoundary.inner === false);
+
   await page.close();
 }
 

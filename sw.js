@@ -2,7 +2,7 @@
 // Purpose: make the app openable with no network at all once it has been visited once.
 // It caches only this app's own files. It never contacts any other origin, and it never
 // transmits anything — the app itself makes no network requests at runtime.
-const CACHE = 'silent-medic-v0.5.0';
+const CACHE = 'silent-medic-v0.5.1';
 const ASSETS = [
   './',
   './index.html',

@@ -10,14 +10,29 @@
 <link rel="apple-touch-icon" href="./icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="SILENT MEDIC">
-<title>SILENT MEDIC v0.5.0 — Offline Clinical Decision Support</title>
+<title>SILENT MEDIC v0.5.1 — Offline Clinical Decision Support</title>
 <!--
-  SILENT MEDIC v0.5.0 — Offline Clinical Decision Support for Prolonged Field Care
+  SILENT MEDIC v0.5.1 — Offline Clinical Decision Support for Prolonged Field Care
   © 2026 Jae H. Choi, MSc, PhD, DVSc
   Knowledge base: TCCC-RX (117 drugs · 438 dual-use mappings · 9 categories)
   Runtime: Browser-resident; no data transmitted.
 
   VERSION HISTORY
+  v0.5.1  2026-08-25  Search ranking: the drug the query is about now comes first.
+                      · Retrieval weights a match in the indication ("Primary use:", or the
+                        dual-use label) and in the drug class far above a match anywhere in
+                        the body text, and adds an exact-phrase bonus when the whole query is
+                        the indication. A second signal rewards covering every word of the
+                        query over one word repeated.
+                      · Term matching is now whole-word: "opioid" still matches
+                        "opioid-sparing", but "dose" no longer matches "overdose".
+                      · Effect: "opioid overdose" returned calcium, lidocaine, ondansetron,
+                        dexmedetomidine and promethazine above naloxone — five of them scoring
+                        on "opioid-sparing" — and now returns naloxone first. Same correction
+                        for cyanide, methemoglobinemia, nerve agent, and hyperkalemia.
+                      · Ranking only. No record, dose, indication, warning, citation, or
+                        decision rule was touched; the knowledge base hash is unchanged.
+                      · Gate: 63 checks (55 + 6 ranking + 2 word-boundary).
   v0.5.0  2026-08-23  Handoff, accessibility, and install.
                       · Decision engine: a depressed GCS no longer counts as head injury on
                         its own. The TBI targets and ketamine analgesia rules now require a
@@ -901,7 +916,7 @@ body {
       <span class="icon-box">SM</span>
       SILENT MEDIC
     </div>
-    <div class="boot-sub">Offline Clinical Decision Support · v0.5.0</div>
+    <div class="boot-sub">Offline Clinical Decision Support · v0.5.1</div>
     <div class="boot-log" id="bootLog"></div>
     <div class="boot-progress"><div id="bootBar"></div></div>
     <button class="boot-btn" id="bootBtn" disabled onclick="startSession()">Initializing…</button>
@@ -1020,7 +1035,7 @@ body {
 </div>
 <!-- FOOTER -->
 <div class="footer">
-  <div class="footer-item" style="font-weight:700;">SILENT MEDIC v0.5.0 · BUILD 2026-08-23</div>
+  <div class="footer-item" style="font-weight:700;">SILENT MEDIC v0.5.1 · BUILD 2026-08-25</div>
   <div class="footer-item">TCCC-RX · 117 drugs · 438 dual-use maps</div>
   <div class="footer-item" id="footerKB">—</div>
   <div class="spacer"></div>
@@ -1063,7 +1078,7 @@ function setProgress(p) { bootBar.style.width = p + '%'; }
 // Expected SHA-256 of the decompressed KB JSON (computed at build time).
 // If the runtime hash differs, the data may be corrupted — surface a warning
 // in the UI rather than blocking the tool outright.
-const APP_VERSION = 'v0.5.0';
+const APP_VERSION = 'v0.5.1';
 const KB_EXPECTED_SHA256 = 'd0b53956530cf2f5f32290e430a038bbe2f7dec1d98021a9b7456b2da26595ae';
 async function decompressKB() {
   const b64 = document.getElementById('kbData').textContent.trim();
@@ -1264,6 +1279,42 @@ function setMode(m) {
   document.getElementById('queryInput').placeholder = ph[m];
 }
 // ---------------- RETRIEVAL ----------------
+// Ranking only. This function decides the ORDER in which existing records are shown.
+// It never changes what a record says. Presentation layer — see test/README.md.
+//
+// What the drug IS FOR must outrank an incidental mention of the word. A query for
+// "opioid overdose" has to surface naloxone, not the five drugs whose indication text
+// happens to contain "opioid-sparing". Two signals do that work:
+//   1. field weighting — a hit in the indication ("Primary use:" / dual-use label) or
+//      the drug class counts far more than a hit anywhere in the body text;
+//   2. query coverage — a record matching every word of the query outranks one that
+//      matched a single word many times.
+const FIELD_CACHE = new Map();
+function chunkFields(chunk) {
+  const key = chunk.i + '|' + chunk.t + '|' + (chunk.u || '');
+  let f = FIELD_CACHE.get(key);
+  if (f) return f;
+  const text = chunk.x || '';
+  const pick = label => {
+    const m = text.match(new RegExp('^' + label + ':\\s*(.+)$', 'mi'));
+    return m ? m[1].toLowerCase().trim() : '';
+  };
+  f = { use: pick('Primary use'), klass: pick('Class') };
+  FIELD_CACHE.set(key, f);
+  return f;
+}
+// Whole-word containment: "opioid" matches "opioid-sparing" but "dose" does not match "overdose".
+function hasWord(hay, w) {
+  if (!hay || !w) return false;
+  let i = hay.indexOf(w);
+  while (i !== -1) {
+    const before = i === 0 ? ' ' : hay[i - 1];
+    const after = i + w.length >= hay.length ? ' ' : hay[i + w.length];
+    if (!/[a-z0-9]/.test(before) && !/[a-z0-9]/.test(after)) return true;
+    i = hay.indexOf(w, i + 1);
+  }
+  return false;
+}
 function retrieve(query, k = 8) {
   const q = query.toLowerCase().trim();
   if (!q) return [];
@@ -1283,8 +1334,24 @@ function retrieve(query, k = 8) {
       while (idx !== -1 && occ < 3) { occ++; idx = content.indexOf(w, idx + 1); }
       score += occ * 2;
     }
-    const use = (chunk.u || '').toLowerCase();
-    if (use) for (const w of qWords) if (use.includes(w)) score += 4;
+    // --- indication and class carry more weight than body text -------------
+    const fields = chunkFields(chunk);
+    const use = (chunk.u || fields.use || '').toLowerCase();
+    if (use) {
+      if (q.length > 3 && use.includes(q)) score += 40;   // whole query is the indication
+      for (const w of qWords) if (hasWord(use, w)) score += 8;
+    }
+    const klass = fields.klass;
+    if (klass) {
+      if (q.length > 3 && klass.includes(q)) score += 20;
+      for (const w of qWords) if (hasWord(klass, w)) score += 6;
+    }
+    // --- coverage: answering the whole query beats one word repeated -------
+    if (qWords.length > 1 && score > 0) {
+      const hay = drugName + ' ' + use + ' ' + klass + ' ' + content + ' ' + kws.join(' ');
+      const hit = qWords.filter(w => hasWord(hay, w)).length;
+      score *= 0.55 + 0.45 * (hit / qWords.length);
+    }
     if (chunk.t === 'primary' && firstName && q.includes(firstName)) score += 15;
     if (chunk.e === 'strong') score += 1;
     // Level filter
@@ -1695,7 +1762,7 @@ boot();
 <script>
 // ═══════════════════════════════════════════
 // DECISION SUPPORT ENGINE — TCCC 2026 grounded
-// Offline rule-base · no AI calls · v0.5.0
+// Offline rule-base · no AI calls · v0.5.1
 // ═══════════════════════════════════════════
 let deLastFocus=null;
 function deFocusables(ov){

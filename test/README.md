@@ -22,6 +22,7 @@ Each check is here because that thing broke once.
 | **Boot and integrity** | A knowledge base edit that forgets to recompute `KB_EXPECTED_SHA256`. The app would boot with a loud integrity failure. |
 | **Counts** | Displayed drug and mapping counts drifting from the data. They once read 118, 119, and 120 in different places. Stale values are failed explicitly. |
 | **Query console** | The merged sodium bicarbonate and naloxone records staying reachable by drug name, symptom, and mechanism — merging a record can silently orphan a search route. |
+| **Ranking** | The drug a query is about falling below incidental keyword hits. `opioid overdose` once ranked calcium and four opioid-*sparing* analgesics above naloxone. Six queries with an unambiguous answer assert their first result; two assert whole-word matching (`opioid` matches `opioid-sparing`; `dose` does not match `overdose`). Ranking is presentation — these checks say nothing about what a record contains. |
 | **Decision engine — trauma** | The core rules still firing: tourniquet, TBI targets, TXA. |
 | **Decision engine — GCS gating** | A depressed GCS being read as head injury on a toxidrome casualty. A nerve-agent casualty at GCS 10 must get atropine and 2-PAM and must NOT get TBI targets or ketamine. |
 | **Decision engine — missing kit** | Warnings appearing when a required agent is absent, rather than the rule going silent. |

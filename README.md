@@ -1,7 +1,7 @@
 # SILENT MEDIC
 
 **Offline clinical decision support for prolonged field care.**
-Version 0.5.1 · Build 2026-08-25
+Version 0.5.2 · Build 2026-09-24
 
 A single-file, browser-resident decision support tool for combat casualty care and
 prolonged field care (PFC) environments. It runs entirely in the browser with no
@@ -65,6 +65,10 @@ application. The other files only add the installable, served form.
 ## Changelog
 
 Full history in [CHANGELOG.md](CHANGELOG.md).
+
+**v0.5.2** — 2026-09-24. Knowledge base text: a former-affiliation string was removed from one
+doxycycline research note. No record, dose, indication, warning, citation, or decision rule
+changed; counts unchanged; `KB_EXPECTED_SHA256` recomputed.
 
 **v0.5.1** — 2026-08-25. Search ranking: the drug a query is about now comes first. Retrieval
 weights a match in the indication or the drug class far above a match anywhere in the body

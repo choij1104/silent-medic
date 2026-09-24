@@ -7,6 +7,20 @@ The knowledge base is embedded in `index.html` as gzip+base64 and checked at boo
 
 ---
 
+## v0.5.2 — 2026-09-24
+
+### Knowledge base text
+
+One doxycycline research note (dual-use mapping: snake envenomation anti-inflammatory adjunct)
+carried a former-affiliation string. It was removed; the sentence now reads "Ongoing research
+including laboratory work." This matches the wording already used in the tccc-rx source.
+
+No record, dose, indication, warning, citation, or decision rule changed. Counts are unchanged
+(117 drugs, 438 dual-use mappings, 815 chunks, 9 categories). Because the knowledge base text
+changed, `KB_EXPECTED_SHA256` was recomputed: `6a1b4b1bdf217dc2ad11d48447fb0548cd454c8d5261c2bc5d5d05a029b77673`.
+
+---
+
 ## v0.5.1 — 2026-08-25
 
 ### Search ranking

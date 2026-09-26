@@ -20,7 +20,7 @@ const APP = 'file://' + resolve(HERE, '..', 'index.html');
 const EXEC = process.env.CHROME_PATH || undefined;
 
 // ---- expected state of the knowledge base -------------------------------
-const EXPECT = { drugs: 117, chunks: 815, categories: 9, dualUse: 438 };
+const EXPECT = { drugs: 113, chunks: 813, categories: 9, dualUse: 440 };
 
 let failures = 0, checks = 0;
 const ok = (name, cond, detail = '') => {
@@ -96,8 +96,8 @@ section('Boot, integrity, and counts');
     }
     if (!text.includes(exp.drugs + ' drugs')) bad.push('no "' + exp.drugs + ' drugs" anywhere');
     if (!text.includes(exp.dualUse + ' dual-use')) bad.push('no "' + exp.dualUse + ' dual-use"');
-    for (const wrong of [118, 119, 120]) if (text.includes(wrong + ' drugs')) bad.push('stale "' + wrong + ' drugs"');
-    for (const wrong of [433, 443]) if (text.includes(wrong + ' dual-use')) bad.push('stale "' + wrong + ' dual-use"');
+    for (const wrong of [117, 118, 119, 120]) if (text.includes(wrong + ' drugs')) bad.push('stale "' + wrong + ' drugs"');
+    for (const wrong of [433, 438, 443]) if (text.includes(wrong + ' dual-use')) bad.push('stale "' + wrong + ' dual-use"');
     return bad;
   }, EXPECT);
   ok('no stale counts in the interface', stale.length === 0, stale.join('; '));

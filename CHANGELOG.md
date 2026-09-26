@@ -7,6 +7,16 @@ The knowledge base is embedded in `index.html` as gzip+base64 and checked at boo
 
 ---
 
+## Unreleased — 2026-09-26
+
+- `test/qa.mjs`: regression-gate expectations updated to the verified v0.7.0
+  counts (113 drugs · 813 chunks · 9 categories · 440 dual-use); stale-value
+  lists extended with 117 drugs / 438 dual-use. No app code or data changed.
+- UI: decision-engine mechanism radio chips (`.de-radio`) now meet the 44px
+  minimum touch target on coarse pointers, alongside the other engine controls.
+
+---
+
 ## v0.7.0 — 2026-09-26
 
 ### Drug interaction checker (new, Tools panel)

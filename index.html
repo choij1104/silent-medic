@@ -3,6 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+<script>
+/* v0.6.0: apply persisted theme before first paint to avoid a light-flash in night ops */
+try {
+  var _t = localStorage.getItem('sm-theme');
+  if (_t === 'night' || _t === 'red') document.documentElement.setAttribute('data-theme', _t);
+} catch (e) {}
+</script>
 <meta name="theme-color" content="#0d47a1">
 <meta name="description" content="Offline clinical decision support for prolonged field care. TCCC-RX knowledge base with a deterministic, citation-linked rule engine. No network calls, no data transmission.">
 <link rel="manifest" href="./manifest.webmanifest">
@@ -10,14 +17,45 @@
 <link rel="apple-touch-icon" href="./icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="SILENT MEDIC">
-<title>SILENT MEDIC v0.5.2 — Offline Clinical Decision Support</title>
+<title>SILENT MEDIC v0.6.0 — Offline Clinical Decision Support</title>
 <!--
-  SILENT MEDIC v0.5.2 — Offline Clinical Decision Support for Prolonged Field Care
+  SILENT MEDIC v0.6.0 — Offline Clinical Decision Support for Prolonged Field Care
   © 2026 Jae H. Choi, MSc, PhD, DVSc
   Knowledge base: TCCC-RX (117 drugs · 438 dual-use mappings · 9 categories)
   Runtime: Browser-resident; no data transmitted.
 
   VERSION HISTORY
+  v0.6.0  2026-09-26  Mobile, night ops, and dialog hardening. No clinical content changed;
+                      KB_EXPECTED_SHA256 unchanged; all counts unchanged.
+                      · Mobile nav: at <=800px the left panel (care-level filter + drug
+                        categories) is no longer display:none with no alternative — a
+                        hamburger button in the header opens it as a slide-in drawer
+                        (backdrop tap / Escape closes, focus moves in on open).
+                      · Night themes: header toggle cycles Day -> Night (dark) -> Red-light
+                        (black + red/amber, night-vision preserving). Persisted in
+                        localStorage, applied before first paint. Warning banners, badges,
+                        cards and the decision dialog stay readable in each theme.
+                      · Print-dialog fix: closing the decision panel is now an explicit,
+                        idempotent close (not a toggle), wired to the close button and
+                        Escape; beforeprint/afterprint handlers re-sync overlay state so
+                        the panel can never be left stuck after printing. Print is wrapped
+                        in printDecisionPlan() with error handling.
+                      · Copy feedback: toast ("Copied to clipboard" / failure) plus a
+                        temporary checkmark state on the Copy button.
+                      · Boot: auto-enters the console ~1s after Ready (the Open Console
+                        button remains as a manual skip and cancels the timer).
+                      · Empty search: trimmed; a blank submit no longer touches history or
+                        results — the input shakes briefly instead.
+                      · Touch targets: 44px minimum on coarse pointers for care-level tabs,
+                        query mode tabs and handoff buttons; larger mode-tab type.
+                      · Query mode tabs are real buttons (role=tab, arrow-key navigation).
+                      · Tablet <=1100px: the right panel (Recent Queries / Quick Reference)
+                        is a slide-in drawer from the right instead of display:none.
+                      · Header role badge is now a select (CORPSMAN / IDC, Combat Medic,
+                        PA, Physician, Nurse) — display only, persisted locally.
+                      · Print: the handoff sheet now carries the full disclaimer text
+                        (print-only block); screen behavior unchanged.
+                      · Gate: 63 checks (55 + 6 ranking + 2 word-boundary) still green.
   v0.5.2  2026-09-24  Knowledge base text: removed a former-affiliation string from one
                       doxycycline research note. No dose, indication, warning, citation,
                       or decision rule changed; counts unchanged; KB_EXPECTED_SHA256 recomputed.
@@ -289,6 +327,7 @@ body {
   border: 1px solid var(--border);
   background: var(--panel-2);
   color: var(--text-3);
+  font-family: inherit;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -366,9 +405,11 @@ body {
 }
 .query-mode {
   padding: 6px 12px;
+  font-family: inherit;
   font-size: 13px;
   color: var(--text-2);
   background: var(--panel-2);
+  border: none;
   cursor: pointer;
   border-right: 1px solid var(--border-3);
   user-select: none;
@@ -872,14 +913,283 @@ body {
   a[href]:after{content:''}
 }
 
+/* ============ THEMES (v0.6.0): day default; night + red-light for night ops ============ */
+/* Applied via documentElement[data-theme]; persisted in localStorage; set pre-paint. */
+[data-theme="night"] {
+  --bg:        #0b0f14;
+  --panel:     #121a23;
+  --panel-2:   #182230;
+  --panel-3:   #1f2b3a;
+  --border:    #31445a;
+  --border-2:  #4d637e;
+  --border-3:  #24313f;
+  --text:      #e9eff5;
+  --text-2:    #bccadb;
+  --text-3:    #a3b6ca;
+  --text-4:    #8fa3b8;
+  --blue:      #82b4f2;
+  --blue-dark: #3d6ea8;
+  --blue-bg:   #152a44;
+  --blue-dim:  #2b4a6e;
+  --red:       #ff8a80;
+  --red-bg:    #3a1512;
+  --orange:    #ffbe6e;
+  --orange-bg: #3a2410;
+  --green:     #82d998;
+  --green-bg:  #122a1b;
+  --teal:      #6fd6c8;
+  --teal-bg:   #0f2c29;
+  --purple:    #cda6ff;
+  --purple-bg: #2b1a48;
+  --r12:       #ffab70;
+  --r12-bg:    #3a2110;
+  --pfc:       #cda6ff;
+  --pfc-bg:    #2b1a48;
+  --ccatt:     #6fd6c8;
+  --ccatt-bg:  #0f2c29;
+}
+/* Red-light: strict light discipline — black surfaces, red/amber only (no blue/green emission) */
+[data-theme="red"] {
+  --bg:        #000000;
+  --panel:     #0e0202;
+  --panel-2:   #160404;
+  --panel-3:   #1e0606;
+  --border:    #5c1d1d;
+  --border-2:  #8f2f2f;
+  --border-3:  #3a1111;
+  --text:      #ffc9bd;
+  --text-2:    #ff9d8a;
+  --text-3:    #ef7f6b;
+  --text-4:    #d36552;
+  --blue:      #ffab40;
+  --blue-dark: #4a2408;
+  --blue-bg:   #2b1c06;
+  --blue-dim:  #5c3c12;
+  --red:       #ff6f61;
+  --red-bg:    #2e0a0a;
+  --orange:    #ffbe6e;
+  --orange-bg: #2b1c06;
+  --green:     #ffd54f;
+  --green-bg:  #2b2106;
+  --teal:      #ffab91;
+  --teal-bg:   #2b120a;
+  --purple:    #ff9d8a;
+  --purple-bg: #2b0f0f;
+  --r12:       #ffab40;
+  --r12-bg:    #2b1c06;
+  --pfc:       #ff9d8a;
+  --pfc-bg:    #2b0f0f;
+  --ccatt:     #ffab91;
+  --ccatt-bg:  #2b120a;
+}
+/* Hardcoded light surfaces that must follow the theme */
+[data-theme="night"] .de-rec, [data-theme="red"] .de-rec { background: var(--panel); }
+[data-theme="night"] .de-input:focus, [data-theme="red"] .de-input:focus { background: var(--panel); }
+[data-theme="night"] .de-rec-warning, [data-theme="red"] .de-rec-warning { background: var(--red-bg); }
+[data-theme="night"] .de-rec-pfc, [data-theme="red"] .de-rec-pfc { background: var(--orange-bg); }
+[data-theme="night"] .de-rec-cite, [data-theme="red"] .de-rec-cite { color: var(--green); }
+[data-theme="night"] .de-disclaimer { background: #2b230f; color: #ffd98a; border-color: #8a6d1f; }
+[data-theme="red"] .de-disclaimer { background: #200a0a; color: #ff9d8a; border-color: #8f2f2f; }
+[data-theme="night"] .header { border-bottom-color: #1c2f45; }
+[data-theme="red"] .header { background: #2b0d0d; color: #ffc9bd; border-bottom-color: #5c1d1d; }
+[data-theme="red"] .header .user-badge { background: rgba(255,120,100,0.14); color: #ffc9bd; }
+[data-theme="red"] .de-toggle {
+  background: linear-gradient(135deg, #8f2f2f, #5c1d1d);
+  box-shadow: 0 4px 12px rgba(143,47,47,0.4);
+}
+[data-theme="red"] .de-toggle.active { background: linear-gradient(135deg, #c62828, #8e0000); }
+/* Print always renders on light paper regardless of theme */
+@media print {
+  :root, [data-theme="night"], [data-theme="red"] {
+    --bg: #ffffff; --panel: #ffffff; --panel-2: #f8fafc; --panel-3: #eef2f7;
+    --text: #1c2e3e; --text-2: #3a5a78; --text-3: #42627e; --blue: #0f57ab;
+    --red: #b41f1f; --red-bg: #fdecea; --green: #186334;
+  }
+}
+
+/* ============ DRAWERS (v0.6.0): left nav <=800px, right context <=1100px ============ */
+.nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 6px;
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+}
+.panel-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 10px;
+  flex: 0 0 auto;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 6px;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+}
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 10px;
+  flex: 0 0 auto;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 6px;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+}
+select.user-badge {
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.25);
+  font-family: inherit;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 8px;
+}
+select.user-badge option { color: #1c2e3e; }
+#drawerBackdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10,15,20,0.55);
+  z-index: 290;
+}
+#drawerBackdrop.show { display: block; }
+@media (max-width: 1100px) {
+  .right-panel {
+    display: block;
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    width: 320px;
+    max-width: 88vw;
+    z-index: 300;
+    background: var(--panel);
+    border-left: 1px solid var(--border);
+    box-shadow: -8px 0 28px rgba(0,0,0,0.28);
+    transform: translateX(105%);
+    transition: transform 0.24s ease;
+    overflow-y: auto;
+  }
+  .right-panel.drawer-open { transform: none; }
+  .panel-toggle { display: inline-flex; }
+}
+@media (max-width: 800px) {
+  .nav-toggle { display: inline-flex; }
+  .left-panel {
+    display: block;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: 300px;
+    max-width: 86vw;
+    z-index: 300;
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    box-shadow: 8px 0 28px rgba(0,0,0,0.28);
+    transform: translateX(-105%);
+    transition: transform 0.24s ease;
+    overflow-y: auto;
+  }
+  .left-panel.drawer-open { transform: none; }
+}
+
+/* ============ TOAST (v0.6.0) ============ */
+#toast {
+  position: fixed;
+  left: 50%;
+  bottom: 88px;
+  transform: translateX(-50%) translateY(12px);
+  background: #1c2e3e;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 400;
+  max-width: 90vw;
+  text-align: center;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+#toast.ok { background: #186334; }
+#toast.err { background: #b41f1f; }
+[data-theme="night"] #toast.ok { background: #1f7a44; }
+[data-theme="night"] #toast.err { background: #d32f2f; }
+[data-theme="red"] #toast { background: #3a1111; color: #ffc9bd; }
+[data-theme="red"] #toast.ok { background: #5c2a0d; }
+[data-theme="red"] #toast.err { background: #5c1d1d; }
+
+/* ============ EMPTY-SEARCH SHAKE (v0.6.0) ============ */
+@keyframes sm-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-3px); }
+}
+.query-input.shake { animation: sm-shake 0.28s ease; border-color: var(--red); }
+
+/* ============ PRINT-ONLY DISCLAIMER (v0.6.0) ============ */
+.de-print-disc { display: none; }
+@media print {
+  .de-print-disc {
+    display: block;
+    margin-top: 12px;
+    padding: 8px;
+    border: 1px solid #999;
+    font-size: 11px;
+    line-height: 1.5;
+    color: #333;
+  }
+}
+
+/* ============ GLOVED-HAND TOUCH TARGETS (v0.6.0) ============ */
+@media (pointer: coarse) {
+  .lvl-tab {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    padding: 8px 4px;
+  }
+  .query-mode {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    padding: 8px 14px;
+  }
+  .de-tool-btn { min-height: 44px; font-size: 14px; }
+  .de-action-btn { min-height: 48px; font-size: 16px; }
+  .de-close { min-height: 44px; }
+}
+
 /* ============ RESPONSIVE (must stay last so it wins the cascade) ============ */
 @media (max-width: 1100px) {
   .layout { grid-template-columns: 220px 1fr; }
-  .right-panel { display: none; }
+  /* v0.6.0: right panel becomes a slide-in drawer (see DRAWERS section above), not display:none */
 }
 @media (max-width: 800px) {
   .layout { grid-template-columns: 1fr; }
-  .left-panel { display: none; }
+  /* v0.6.0: left panel becomes a slide-in drawer (see DRAWERS section above), not display:none */
 }
 @media (max-width: 720px) {
   body { overflow-x: hidden; }
@@ -919,7 +1229,7 @@ body {
       <span class="icon-box">SM</span>
       SILENT MEDIC
     </div>
-    <div class="boot-sub">Offline Clinical Decision Support · v0.5.2</div>
+    <div class="boot-sub">Offline Clinical Decision Support · v0.6.0</div>
     <div class="boot-log" id="bootLog"></div>
     <div class="boot-progress"><div id="bootBar"></div></div>
     <button class="boot-btn" id="bootBtn" disabled onclick="startSession()">Initializing…</button>
@@ -927,6 +1237,7 @@ body {
 </div>
 <!-- HEADER -->
 <div class="header">
+  <button class="nav-toggle" id="navToggle" aria-label="Open filters and categories" aria-expanded="false" onclick="setDrawer('left', true)">☰</button>
   <div class="logo">
     <span class="icon">SM</span>
     SILENT MEDIC
@@ -940,20 +1251,28 @@ body {
     <div class="status-item"><span class="integrity-badge" id="integrityBadge" title="Knowledge base integrity (SHA-256)" style="display:none;">—</span></div>
     <div class="status-item"><span class="dot ok"></span><span>Local Inference</span></div>
     <div class="status-item clock" id="clock">--:--:--</div>
-    <div class="user-badge">CORPSMAN / IDC</div>
+    <button class="panel-toggle" id="panelToggle" aria-label="Open recent queries and reference" aria-expanded="false" onclick="setDrawer('right', true)" title="Recent queries / Quick reference">🕘</button>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cycle display theme: day, night, red-light" title="Theme: Day" onclick="cycleTheme()">☀️</button>
+    <select class="user-badge" id="roleSelect" aria-label="Provider role" title="Provider role (display only)">
+      <option>CORPSMAN / IDC</option>
+      <option>Combat Medic</option>
+      <option>PA</option>
+      <option>Physician</option>
+      <option>Nurse</option>
+    </select>
   </div>
 </div>
 <!-- MAIN LAYOUT -->
 <div class="layout">
   <!-- LEFT PANEL: Filters and Categories -->
-  <aside class="left-panel">
+  <aside class="left-panel" id="leftPanel" aria-label="Filters and drug categories">
     <div class="panel-section">
       <div class="section-header">Care Level Filter</div>
-      <div class="lvl-tabs">
-        <div class="lvl-tab active-all" data-lvl="all" onclick="setLevel('all')">ALL</div>
-        <div class="lvl-tab" data-lvl="r12" onclick="setLevel('r12')">R1/2</div>
-        <div class="lvl-tab" data-lvl="pfc" onclick="setLevel('pfc')">PFC</div>
-        <div class="lvl-tab" data-lvl="ccatt" onclick="setLevel('ccatt')">CCATT</div>
+      <div class="lvl-tabs" role="group" aria-label="Care level filter">
+        <button type="button" class="lvl-tab active-all" data-lvl="all" onclick="setLevel('all')">ALL</button>
+        <button type="button" class="lvl-tab" data-lvl="r12" onclick="setLevel('r12')">R1/2</button>
+        <button type="button" class="lvl-tab" data-lvl="pfc" onclick="setLevel('pfc')">PFC</button>
+        <button type="button" class="lvl-tab" data-lvl="ccatt" onclick="setLevel('ccatt')">CCATT</button>
       </div>
     </div>
     <div class="panel-section" style="flex: 1; overflow-y: auto;">
@@ -982,10 +1301,10 @@ body {
       </div>
     </div>
     <div class="query-bar">
-      <div class="query-modes">
-        <div class="query-mode active" data-mode="drug" onclick="setMode('drug')">Drug</div>
-        <div class="query-mode" data-mode="sx" onclick="setMode('sx')">Symptom</div>
-        <div class="query-mode" data-mode="mech" onclick="setMode('mech')">Mechanism</div>
+      <div class="query-modes" role="tablist" aria-label="Query mode" id="queryModes">
+        <button type="button" class="query-mode active" role="tab" aria-selected="true" data-mode="drug" onclick="setMode('drug')">Drug</button>
+        <button type="button" class="query-mode" role="tab" aria-selected="false" data-mode="sx" onclick="setMode('sx')">Symptom</button>
+        <button type="button" class="query-mode" role="tab" aria-selected="false" data-mode="mech" onclick="setMode('mech')">Mechanism</button>
       </div>
       <input type="text" class="query-input" id="queryInput"
              placeholder="Enter drug name, clinical situation, or mechanism…"
@@ -1008,7 +1327,7 @@ body {
     </div>
   </main>
   <!-- RIGHT PANEL: Context -->
-  <aside class="right-panel">
+  <aside class="right-panel" id="rightPanel" aria-label="System status, recent queries and quick reference">
     <div class="panel-section">
       <div class="section-header">System Status</div>
       <div class="kv"><span class="kv-label">Runtime</span><span class="kv-value" id="runtimeLabel">—</span></div>
@@ -1038,7 +1357,7 @@ body {
 </div>
 <!-- FOOTER -->
 <div class="footer">
-  <div class="footer-item" style="font-weight:700;">SILENT MEDIC v0.5.2 · BUILD 2026-09-24</div>
+  <div class="footer-item" style="font-weight:700;">SILENT MEDIC v0.6.0 · BUILD 2026-09-26</div>
   <div class="footer-item">TCCC-RX · 117 drugs · 438 dual-use maps</div>
   <div class="footer-item" id="footerKB">—</div>
   <div class="spacer"></div>
@@ -1081,7 +1400,11 @@ function setProgress(p) { bootBar.style.width = p + '%'; }
 // Expected SHA-256 of the decompressed KB JSON (computed at build time).
 // If the runtime hash differs, the data may be corrupted — surface a warning
 // in the UI rather than blocking the tool outright.
-const APP_VERSION = 'v0.5.2';
+const APP_VERSION = 'v0.6.0';
+// v0.6.0: session-start bookkeeping — startSession() is idempotent so the auto-boot
+// timer and a manual "Open Console" tap can never double-enter the console.
+let sessionStarted = false;
+let autoStartTimer = null;
 const KB_EXPECTED_SHA256 = '6a1b4b1bdf217dc2ad11d48447fb0548cd454c8d5261c2bc5d5d05a029b77673';
 async function decompressKB() {
   const b64 = document.getElementById('kbData').textContent.trim();
@@ -1150,8 +1473,13 @@ async function boot() {
   state.ready = true;
   bootBtn.disabled = false;
   bootBtn.textContent = 'Open Console';
+  // v0.6.0: auto-enter the console shortly after Ready; the button stays as a manual skip
+  autoStartTimer = setTimeout(() => { startSession(); }, 1000);
 }
 function startSession() {
+  if (sessionStarted) return; // idempotent: timer + manual tap converge here
+  sessionStarted = true;
+  if (autoStartTimer) { clearTimeout(autoStartTimer); autoStartTimer = null; }
   document.getElementById('boot').classList.add('hide');
   // Update header status
   document.getElementById('netDot').className = 'dot ' + (navigator.onLine ? 'warn' : 'ok');
@@ -1272,7 +1600,10 @@ function setLevel(lvl) {
 function setMode(m) {
   state.queryMode = m;
   document.querySelectorAll('.query-mode').forEach(el => {
-    el.classList.toggle('active', el.getAttribute('data-mode') === m);
+    const on = el.getAttribute('data-mode') === m;
+    el.classList.toggle('active', on);
+    el.setAttribute('aria-selected', on ? 'true' : 'false');
+    el.tabIndex = on ? 0 : -1;
   });
   const ph = {
     drug: 'Enter drug name (TXA, ketamine, ertapenem...)',
@@ -1281,6 +1612,23 @@ function setMode(m) {
   };
   document.getElementById('queryInput').placeholder = ph[m];
 }
+// v0.6.0: arrow-key navigation across the query mode tabs (roving tabindex)
+document.addEventListener('keydown', function(e) {
+  const t = e.target.closest && e.target.closest('.query-mode');
+  if (!t) return;
+  const tabs = [...document.querySelectorAll('.query-mode')];
+  const i = tabs.indexOf(t);
+  let n = -1;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') n = (i + 1) % tabs.length;
+  else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') n = (i - 1 + tabs.length) % tabs.length;
+  else if (e.key === 'Home') n = 0;
+  else if (e.key === 'End') n = tabs.length - 1;
+  if (n >= 0) {
+    e.preventDefault();
+    setMode(tabs[n].getAttribute('data-mode'));
+    tabs[n].focus();
+  }
+});
 // ---------------- RETRIEVAL ----------------
 // Ranking only. This function decides the ORDER in which existing records are shown.
 // It never changes what a record says. Presentation layer — see test/README.md.
@@ -1379,7 +1727,15 @@ async function submitQuery() {
   if (!state.ready) return;
   const input = document.getElementById('queryInput');
   const q = input.value.trim();
-  if (!q) return;
+  if (!q) {
+    // v0.6.0: blank submit records nothing and clears nothing — nudge the field instead
+    input.classList.remove('shake');
+    void input.offsetWidth; // restart the animation
+    input.classList.add('shake');
+    input.focus();
+    setTimeout(() => input.classList.remove('shake'), 400);
+    return;
+  }
   const btn = document.getElementById('queryBtn');
   btn.disabled = true;
   // Show thinking
@@ -1631,7 +1987,7 @@ boot();
         <div class="de-title" id="deDialogTitle">🎯 DECISION SUPPORT MODE</div>
         <div class="de-subtitle">TCCC 2026 / JTS-grounded action sequence generator</div>
       </div>
-      <button class="de-close" onclick="toggleDecisionEngine()">✕ CLOSE</button>
+      <button class="de-close" onclick="closeDecisionEngine()">✕ CLOSE</button>
     </div>
     <div class="de-section">
       <div class="de-section-label">▸ Casualty Profile</div>
@@ -1765,39 +2121,160 @@ boot();
 <script>
 // ═══════════════════════════════════════════
 // DECISION SUPPORT ENGINE — TCCC 2026 grounded
-// Offline rule-base · no AI calls · v0.5.2
+// Offline rule-base · no AI calls · v0.6.0
 // ═══════════════════════════════════════════
 let deLastFocus=null;
 function deFocusables(ov){
   return [...ov.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])')]
     .filter(el=>!el.disabled&&el.offsetParent!==null);
 }
-function toggleDecisionEngine(){
+// v0.6.0: explicit open/close (idempotent) instead of bare toggle logic.
+// Root cause of the v0.5.2 stuck-panel report: the close path depended on a single
+// toggle converging. After window.print(), Chrome's print-preview UI can swallow
+// clicks/keys aimed at the page (the close button is display:none in print CSS),
+// leaving the overlay visually stuck with no recovery but reload. These functions
+// converge unconditionally, and afterprint re-syncs state after the print cycle.
+function openDecisionEngine(){
   const ov=document.getElementById('deOverlay');
   const btn=document.getElementById('deToggle');
-  if(ov.classList.contains('open')){
-    ov.classList.remove('open');
-    ov.setAttribute('aria-hidden','true');
-    btn.classList.remove('active');
-    btn.textContent='🎯 DECISION SUPPORT';
-    btn.setAttribute('aria-expanded','false');
-    if(deLastFocus&&deLastFocus.focus) deLastFocus.focus();
+  if(ov.classList.contains('open')) return;
+  deLastFocus=document.activeElement;
+  ov.classList.add('open');
+  ov.setAttribute('aria-hidden','false');
+  btn.classList.add('active');
+  btn.textContent='✕ CLOSE PANEL';
+  btn.setAttribute('aria-expanded','true');
+  const f=deFocusables(ov);
+  if(f.length) f[0].focus();
+}
+function closeDecisionEngine(){
+  const ov=document.getElementById('deOverlay');
+  const btn=document.getElementById('deToggle');
+  ov.classList.remove('open'); // unconditional: converges even if state desynced
+  ov.setAttribute('aria-hidden','true');
+  btn.classList.remove('active');
+  btn.textContent='🎯 DECISION SUPPORT';
+  btn.setAttribute('aria-expanded','false');
+  if(deLastFocus&&deLastFocus.focus){ try{ deLastFocus.focus(); }catch(e){} }
+}
+function toggleDecisionEngine(){
+  const ov=document.getElementById('deOverlay');
+  if(ov.classList.contains('open')) closeDecisionEngine(); else openDecisionEngine();
+}
+// v0.6.0: print wrapper — keeps the dialog state consistent across the print cycle
+function printDecisionPlan(){
+  try { window.print(); }
+  catch(e){ showToast('Print failed to start', false); }
+}
+window.addEventListener('beforeprint', function(){
+  // drop focus out of the dialog so the print preview can't trap it
+  if(document.activeElement && document.activeElement.blur) document.activeElement.blur();
+});
+window.addEventListener('afterprint', function(){
+  // re-sync: if the overlay claims to be open, make sure it is truly closable
+  const ov=document.getElementById('deOverlay');
+  if(!ov) return;
+  const open=ov.classList.contains('open');
+  ov.setAttribute('aria-hidden', open ? 'false' : 'true');
+  const btn=document.getElementById('deToggle');
+  if(btn){
+    btn.classList.toggle('active', open);
+    btn.textContent=open?'✕ CLOSE PANEL':'🎯 DECISION SUPPORT';
+    btn.setAttribute('aria-expanded', open?'true':'false');
+  }
+});
+// ═══════════════ v0.6.0 UI: drawers, themes, role ═══════════════
+// --- Slide-in drawers: left (filters/categories, <=800px), right (context, <=1100px)
+let drawerLastFocus=null;
+function setDrawer(which, open){
+  const map={left:['leftPanel','navToggle'],right:['rightPanel','panelToggle']};
+  const [panelId, toggleId]=map[which];
+  const panel=document.getElementById(panelId);
+  const toggle=document.getElementById(toggleId);
+  const backdrop=document.getElementById('drawerBackdrop');
+  const other=which==='left'?'right':'left';
+  const [otherPanelId]=map[other];
+  const otherPanel=document.getElementById(otherPanelId);
+  if(open){
+    if(otherPanel) otherPanel.classList.remove('drawer-open');
+    drawerLastFocus=document.activeElement;
+    panel.classList.add('drawer-open');
+    backdrop.classList.add('show');
+    if(toggle) toggle.setAttribute('aria-expanded','true');
+    const f=panel.querySelector('button, input, select, [tabindex]:not([tabindex="-1"])');
+    if(f) f.focus();
   } else {
-    deLastFocus=document.activeElement;
-    ov.classList.add('open');
-    ov.setAttribute('aria-hidden','false');
-    btn.classList.add('active');
-    btn.textContent='✕ CLOSE PANEL';
-    btn.setAttribute('aria-expanded','true');
-    const f=deFocusables(ov);
-    if(f.length) f[0].focus();
+    panel.classList.remove('drawer-open');
+    if(!otherPanel || !otherPanel.classList.contains('drawer-open')) backdrop.classList.remove('show');
+    if(toggle){
+      toggle.setAttribute('aria-expanded','false');
+      if(drawerLastFocus&&drawerLastFocus.focus){ try{ drawerLastFocus.focus(); }catch(e){} }
+    }
   }
 }
+function closeDrawers(){
+  setDrawer('left', false);
+  setDrawer('right', false);
+}
+// --- Themes: day -> night -> red-light (persisted, applied pre-paint in <head>)
+const THEMES=[
+  {id:'',      icon:'☀️', label:'Day'},
+  {id:'night', icon:'🌙', label:'Night'},
+  {id:'red',   icon:'🔴', label:'Red-light'},
+];
+function currentTheme(){
+  return document.documentElement.getAttribute('data-theme')||'';
+}
+function applyTheme(id){
+  if(id) document.documentElement.setAttribute('data-theme', id);
+  else document.documentElement.removeAttribute('data-theme');
+  try{ localStorage.setItem('sm-theme', id); }catch(e){}
+  const t=THEMES.find(x=>x.id===id)||THEMES[0];
+  const btn=document.getElementById('themeToggle');
+  if(btn){ btn.textContent=t.icon; btn.title='Theme: '+t.label; btn.setAttribute('aria-label','Display theme: '+t.label+'. Activate to switch.'); }
+  const meta=document.querySelector('meta[name="theme-color"]');
+  if(meta) meta.setAttribute('content', id==='red' ? '#000000' : id==='night' ? '#0b0f14' : '#0d47a1');
+}
+function cycleTheme(){
+  const ids=THEMES.map(t=>t.id);
+  const next=ids[(ids.indexOf(currentTheme())+1)%ids.length];
+  applyTheme(next);
+  const t=THEMES.find(x=>x.id===next);
+  showToast('Theme: '+t.label, true);
+}
+// --- Provider role badge (display only, persisted locally)
+function initRoleSelect(){
+  const sel=document.getElementById('roleSelect');
+  if(!sel) return;
+  try{
+    const saved=localStorage.getItem('sm-role');
+    if(saved) [...sel.options].forEach(o=>{ if(o.text===saved) sel.value=o.value||o.text; });
+  }catch(e){}
+  sel.addEventListener('change', ()=>{
+    try{ localStorage.setItem('sm-role', sel.options[sel.selectedIndex].text); }catch(e){}
+  });
+}
+// --- v0.6.0 UI wiring
+document.addEventListener('DOMContentLoaded', function(){
+  applyTheme(currentTheme()); // sync toggle icon with the pre-paint theme
+  initRoleSelect();
+  document.getElementById('drawerBackdrop').addEventListener('click', closeDrawers);
+});
+// Escape closes an open drawer (the decision-dialog Escape path is separate, above)
+document.addEventListener('keydown', function(e){
+  if(e.key!=='Escape') return;
+  const lp=document.getElementById('leftPanel');
+  const rp=document.getElementById('rightPanel');
+  if((lp&&lp.classList.contains('drawer-open'))||(rp&&rp.classList.contains('drawer-open'))){
+    e.preventDefault();
+    closeDrawers();
+  }
+});
 // Escape closes the panel; Tab is trapped inside it while open
 document.addEventListener('keydown',function(e){
   const ov=document.getElementById('deOverlay');
   if(!ov||!ov.classList.contains('open')) return;
-  if(e.key==='Escape'){ e.preventDefault(); toggleDecisionEngine(); return; }
+  if(e.key==='Escape'){ e.preventDefault(); closeDecisionEngine(); return; }
   if(e.key!=='Tab') return;
   const f=deFocusables(ov);
   if(!f.length) return;
@@ -2171,7 +2648,7 @@ function generateDecisionPlan(){
       <div class="de-out-title">▶ TCCC 2026 ACTION SEQUENCE — ${recs.length} RECOMMENDATIONS</div>
       <div class="de-out-tools">
         <button type="button" class="de-tool-btn" onclick="copyDecisionPlan(this)">Copy</button>
-        <button type="button" class="de-tool-btn" onclick="window.print()">Print</button>
+        <button type="button" class="de-tool-btn" onclick="printDecisionPlan()">Print</button>
       </div>
     </div>
     <div class="de-out-meta">
@@ -2187,6 +2664,8 @@ function generateDecisionPlan(){
       <div class="de-rec-cite">📖 ${r.cite}</div>
     </div>`).join('')+
     `<div class="de-out-foot">Reference aid only — not a substitute for provider judgment. Verify against current guidelines and local medical direction before acting.</div>`;
+    // v0.6.0: full disclaimer rides along on the printed handoff (print-only CSS)
+    out.innerHTML += `<div class="de-print-disc"><strong>⚠ DISCLAIMER:</strong> Decision Support generates suggestions grounded in TCCC Guidelines 01 May 2026 and other published standards. This is a clinical decision support tool — not a substitute for trained provider judgment. Always verify against current unit SOPs and the casualty's actual clinical status. Local medical direction / authorized provider scope governs all interventions.</div>`;
 }
 // ---------- plain-text rendering for handoff ----------
 function decisionPlanText(){
@@ -2209,11 +2688,26 @@ function decisionPlanText(){
   L.push('Verify against current guidelines and local medical direction before acting.');
   return L.join('\n');
 }
+// v0.6.0: toast notifications (copy feedback, drawer hints, print errors)
+let toastTimer=null;
+function showToast(msg, ok){
+  const t=document.getElementById('toast');
+  if(!t) return;
+  t.textContent=msg;
+  t.className='show'+(ok===true?' ok':ok===false?' err':'');
+  if(toastTimer) clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>{ t.classList.remove('show'); }, 2200);
+}
 async function copyDecisionPlan(btn){
   const txt=decisionPlanText();
   if(!txt) return;
-  const done=ok=>{const o=btn.textContent;btn.textContent=ok?'Copied':'Copy failed';btn.disabled=true;
-    setTimeout(()=>{btn.textContent=o;btn.disabled=false;},1600);};
+  const done=ok=>{
+    const o=btn.textContent;
+    btn.textContent=ok?'✓ Copied':'Copy failed';
+    btn.disabled=true;
+    showToast(ok?'Copied to clipboard':'Copy failed — long-press the plan to copy manually', ok);
+    setTimeout(()=>{btn.textContent=o;btn.disabled=false;},1600);
+  };
   try{
     await navigator.clipboard.writeText(txt);
     done(true);
@@ -2229,5 +2723,7 @@ async function copyDecisionPlan(btn){
   }
 }
 </script>
+<div id="drawerBackdrop" onclick="closeDrawers()"></div>
+<div id="toast" role="status" aria-live="polite"></div>
 </body>
 </html>

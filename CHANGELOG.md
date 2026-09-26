@@ -39,8 +39,24 @@ content, levels, and keywords preserved; 37 linked level-context/dual-use
 entries were renamed to the base drug name. No decision-engine rule changed.
 
 Counts: 113 drugs, 440 dual-use mappings, 813 chunks. `KB_EXPECTED_SHA256`
-recomputed: `d2c478ea660a21b83fd116c8bc4727e73e5fba6c8e7cb0b1afa76a89299417b6`.
+recomputed: `4d15e38f064864e7312dfbacd705ff65d139095ba9779d053518c2e5add75ca0`.
 `data/kb.json` regenerated from the embedded KB.
+
+### Amendment (2026-09-26, same build)
+
+- Ceftriaxone entry: the definitive "TCCC Change 25-1 made ceftriaxone the parenteral wound
+  antibiotic of choice, replacing ertapenem" claim was softened to a neutral note — guidance on
+  the parenteral combat-wound antibiotic has varied across TCCC updates (ceftriaxone vs
+  ertapenem); verify current unit SOP and medical direction. The Ertapenem entry's
+  cross-reference was updated to match. `KB_EXPECTED_SHA256` recomputed:
+  `4d15e38f064864e7312dfbacd705ff65d139095ba9779d053518c2e5add75ca0`.
+- Decision engine: moxifloxacin and ertapenem are now wired into the §12 antibiotic
+  recommendations for wound scenarios. Casualty able to take PO → Moxifloxacin 400 mg PO once
+  daily; unable to take PO (shock/unconsciousness, GCS <13) → Ertapenem 1 g IV/IO/IM once daily.
+  Both carry kit-availability warning hooks (new Ertapenem / Moxifloxacin resource checkboxes)
+  and contraindication screening notes (QT-risk drugs for moxifloxacin; dextrose incompatibility,
+  lidocaine-reconstitution allergy, beta-lactam anaphylaxis for ertapenem). No other decision
+  rules changed.
 
 
 ### Knowledge base text

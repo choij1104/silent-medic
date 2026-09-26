@@ -7,7 +7,41 @@ The knowledge base is embedded in `index.html` as gzip+base64 and checked at boo
 
 ---
 
-## v0.5.2 — 2026-09-24
+## v0.7.0 — 2026-09-26
+
+### Drug interaction checker (new, Tools panel)
+
+Select two or more drugs from the formulary and check them pairwise against a
+curated 63-pair interaction list (3 CONTRAINDICATED, 33 MAJOR, 27 MODERATE),
+each with a one-line mechanism and management note. The list is curated — NOT
+exhaustive — and the UI states explicitly that absence of a flag does not mean
+safe. Verified pairs include moxifloxacin + ondansetron (QT/torsades, MAJOR)
+and ertapenem + valproate (carbapenem lowers valproate → breakthrough seizures,
+CONTRAINDICATED). Interaction data lives in a separate JSON block in
+`index.html` (not part of the hashed KB blob).
+
+### Weight-based dose calculator (new, Tools panel)
+
+Computes doses for 9 drugs / 12 rules (ketamine analgesia IV/IO, ketamine
+infusion, ketamine RSI, rocuronium RSI, NAC 3-phase acetaminophen-OD protocol,
+dantrolene, mannitol, sugammadex, fentanyl IN, sodium bicarbonate, midazolam
+emergence premedication). Each result quotes the KB entry text verbatim. Rules
+were added only where entries state explicit mg/kg (or mcg/kg, mEq/kg) dosing;
+ambiguous entries were skipped and none invented. Example: ketamine 70 kg →
+14–21 mg.
+
+### Knowledge base dedupe
+
+Six near-duplicate primary pairs (Adenosine, Ciprofloxacin, Doxycycline,
+Haloperidol, Norepinephrine, Vasopressin — each had a base entry plus an
+Extended/Detailed Protocol entry) were merged into single entries with all
+content, levels, and keywords preserved; 37 linked level-context/dual-use
+entries were renamed to the base drug name. No decision-engine rule changed.
+
+Counts: 113 drugs, 440 dual-use mappings, 813 chunks. `KB_EXPECTED_SHA256`
+recomputed: `d2c478ea660a21b83fd116c8bc4727e73e5fba6c8e7cb0b1afa76a89299417b6`.
+`data/kb.json` regenerated from the embedded KB.
+
 
 ### Knowledge base text
 

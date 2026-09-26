@@ -1,10 +1,10 @@
 {
- "source": "Extracted from silent-medic index.html kbData, v0.5.2 (build 2026-09-24). Single source of truth for downstream builds (App Store reference build, web full build, institutional build).",
- "kb_sha256_of_embedded_json": "6a1b4b1bdf217dc2ad11d48447fb0548cd454c8d5261c2bc5d5d05a029b77673",
+ "source": "Extracted from silent-medic index.html kbData, v0.7.0 (build 2026-09-26). Single source of truth for downstream builds (App Store reference build, web full build, institutional build).",
+ "kb_sha256_of_embedded_json": "d2c478ea660a21b83fd116c8bc4727e73e5fba6c8e7cb0b1afa76a89299417b6",
  "counts": {
-  "drugs": 117,
-  "chunks": 815,
-  "dual_use": 438,
+  "drugs": 113,
+  "chunks": 813,
+  "dual_use": 440,
   "categories": 9
  },
  "schema": {
@@ -2691,9 +2691,13 @@
     "overview",
     "level:ccatt",
     "primary",
-    "vasopressin"
+    "vasopressin",
+    "endogenous peptide hormone / v1 vasopressor / v2 antidiuretic / gi vasoconstrictor",
+    "vasopressin — extended uses (adh / v1/v2 agonist)",
+    "vasopressin_ext",
+    "extended uses"
    ],
-   "x": "DRUG: Vasopressin\nClass: Endogenous nonapeptide / V1/V2 receptor agonist\nCategory: vasoactive\nLevels: pfc, ccatt\nPrimary use: Refractory vasodilatory shock; catecholamine-sparing; cardiac arrest\nMechanism: V1 receptor → vascular smooth muscle contraction INDEPENDENT of catecholamine receptors; V2 → renal water reabsorption (ADH); effective when catecholamine receptors downregulated by prolonged shock or acidosis; vasopressin is depleted in septic shock\nWARNINGS: Do not exceed 0.04 U/min in septic shock — mesenteric and digital ischemia. Not a first-line vasopressor — always combine with or add to norepinephrine.\nNotes: Key tactical teaching: vasopressin is the \"backup\" vasopressor when catecholamine receptors are exhausted. Prolongs survival in prolonged shock when NE alone is failing.",
+   "x": "DRUG: Vasopressin\nClass: Endogenous nonapeptide / V1 / V2 receptor agonist / Endogenous peptide hormone / V1 vasopressor / V2 antidiuretic / GI vasoconstrictor\nCategory: vasoactive\nLevels: pfc, ccatt\nPrimary use: Refractory vasodilatory shock; catecholamine-sparing; cardiac arrest. Distributive shock vasopressor; cardiac arrest; variceal hemorrhage; diabetes insipidus; refractory hemorrhagic shock adjunct\nMechanism: V1 receptor → vascular smooth muscle contraction INDEPENDENT of catecholamine receptors; V2 → renal water reabsorption (ADH); effective when catecholamine receptors downregulated by prolonged shock or acidosis; vasopressin is depleted in septic shock. V1 receptor agonism → peripheral vasoconstriction (catecholamine-independent); V2 receptor agonism → renal water reabsorption (ADH effect); V1 in GI tract → splanchnic vasoconstriction → reduces portal pressure for variceal bleeding; depleted in prolonged septic shock → exogenous replacement restores vascular tone\nWARNINGS: Do not exceed 0.04 U/min in septic shock — mesenteric and digital ischemia. Not a first-line vasopressor — always combine with or add to norepinephrine. Coronary vasoconstriction — use with caution in known CAD. Mesenteric ischemia with high doses. Hyponatremia with excessive V2 stimulation. Not titratable like norepinephrine for BP management alone.\nNotes: Key tactical teaching: vasopressin is the \"backup\" vasopressor when catecholamine receptors are exhausted. Prolongs survival in prolonged shock when NE alone is failing. DI after TBI or pituitary surgery: urine output >250 mL/hr + rising serum sodium = central DI. Desmopressin 1-4 mcg IV/SQ preferred over vasopressin for DI (pure V2 effect, no hemodynamic changes).",
    "e": "strong",
    "u": "",
    "s": ""
@@ -3719,9 +3723,12 @@
     "tetracycline antibiotic / mmp inhibitor / cbrn agent",
     "doxycycline",
     "overview",
-    "primary"
+    "primary",
+    "doxycycline — extended military uses",
+    "doxycycline_ext",
+    "tetracycline antibiotic / protein synthesis inhibitor / intracellular pathogen coverage"
    ],
-   "x": "DRUG: Doxycycline\nClass: Tetracycline antibiotic / MMP inhibitor / CBRN agent\nCategory: abx\nLevels: r12, pfc, ccatt\nPrimary use: Atypical pneumonia; CBRN (anthrax, plague, tularemia, brucellosis); STIs; malaria prophylaxis\nMechanism: 30S ribosomal inhibitor → bacteriostatic broad spectrum; intracellular penetration (Rickettsia, Chlamydia, Brucella); MMP (matrix metalloproteinase) inhibition at sub-antimicrobial doses → anti-inflammatory and anti-collagenolytic; anti-collagenase in wound healing\nWARNINGS: Photosensitivity — critical in desert/tropical deployments. Take with food; esophageal ulceration without adequate water. Avoid in pregnancy and children <8 years.\nNotes: CBRN critical drug: doxycycline is the only antibiotic that covers BOTH bacterial CBRN agents (anthrax, plague, tularemia) AND Rickettsia/intracellular tick-borne fevers. Cannot be fully replaced.",
+   "x": "DRUG: Doxycycline\nClass: Tetracycline antibiotic / MMP inhibitor / CBRN agent / Protein synthesis inhibitor / Intracellular pathogen coverage\nCategory: abx\nLevels: r12, pfc, ccatt\nPrimary use: Atypical pneumonia; CBRN (anthrax, plague, tularemia, brucellosis); STIs; malaria prophylaxis. Malaria prophylaxis; anthrax treatment/PEP; Rickettsial diseases; RMSF; Lyme disease; CAP; SSTI; STIs; anti-inflammatory (subantimicrobial dose)\nMechanism: 30S ribosomal inhibitor → bacteriostatic broad spectrum; intracellular penetration (Rickettsia, Chlamydia, Brucella); MMP (matrix metalloproteinase) inhibition at sub-antimicrobial doses → anti-inflammatory and anti-collagenolytic; anti-collagenase in wound healing. Inhibits 30S ribosomal subunit → blocks aminoacyl-tRNA binding → bacteriostatic; excellent intracellular penetration → effective for obligate intracellular pathogens (Rickettsia, Chlamydia, Brucella, Q fever); oral bioavailability 93%; long half-life (18-22h) → once or twice daily dosing; anti-inflammatory at subantimicrobial doses via MMP inhibition\nWARNINGS: Photosensitivity — critical in desert/tropical deployments. Take with food; esophageal ulceration without adequate water. Avoid in pregnancy and children <8 years (teeth staining, bone growth). Photosensitivity — severe sunburn risk in deployed tropical sun; use sunscreen. Esophageal irritation — take with full glass of water and remain upright 30 min. Take 2h before or 6h after calcium/antacids (chelation reduces absorption). Tooth discoloration historical concern with prolonged pediatric use.\nNotes: CBRN critical drug: doxycycline is the only antibiotic that covers BOTH bacterial CBRN agents (anthrax, plague, tularemia) AND Rickettsia/intracellular tick-borne fevers. Cannot be fully replaced. RMSF teaching: doxycycline is safe in ALL ages for RMSF (including children <8 years when life-threatening) — the benefit far outweighs cosmetic tooth risk. Do NOT use alternative antibiotics for suspected RMSF — chloramphenicol is the only alternative and is inferior. Empiric treatment saves lives.",
    "e": "strong",
    "u": "",
    "s": ""
@@ -3935,9 +3942,12 @@
     "level:pfc",
     "overview",
     "level:ccatt",
-    "primary"
+    "primary",
+    "ciprofloxacin — bioterrorism / special uses",
+    "fluoroquinolone / dna gyrase + topoisomerase iv inhibitor",
+    "ciprofloxacin_ext"
    ],
-   "x": "DRUG: Ciprofloxacin\nClass: Fluoroquinolone / DNA gyrase / Topoisomerase IV inhibitor\nCategory: abx\nLevels: r12, pfc, ccatt\nPrimary use: Gram-negative infections; UTI; GI infections; CBRN post-exposure prophylaxis\nMechanism: Inhibits bacterial DNA gyrase and topoisomerase IV → prevents DNA supercoiling → bactericidal; broad gram-negative + some gram-positive + atypical coverage; excellent intracellular penetration; near 100% oral bioavailability (IV = PO in efficacy)\nWARNINGS: Tendon rupture (especially Achilles) — particularly with steroids. Avoid in children, pregnant. QT prolongation. Increasing fluoroquinolone resistance globally.\nNotes: Near 100% oral bioavailability means ciprofloxacin PO is equivalent to IV for systemic infections — critical in field/PFC settings where IV access is limited.",
+   "x": "DRUG: Ciprofloxacin\nClass: Fluoroquinolone / DNA gyrase / Topoisomerase IV inhibitor\nCategory: abx\nLevels: r12, pfc, ccatt\nPrimary use: Gram-negative infections; UTI; GI infections; CBRN post-exposure prophylaxis. Anthrax post-exposure prophylaxis; plague treatment; traveler diarrhea; UTI; Pseudomonas; bioterrorism agent treatment\nMechanism: Inhibits bacterial DNA gyrase and topoisomerase IV → prevents DNA supercoiling → bactericidal; broad gram-negative + some gram-positive + atypical coverage; excellent intracellular penetration; near 100% oral bioavailability (IV = PO in efficacy). Inhibits bacterial DNA gyrase (gram-negative focus) and topoisomerase IV → prevents DNA supercoiling and replication → bactericidal; broad gram-negative spectrum including Pseudomonas; excellent oral bioavailability (~80%) = IV equivalent; penetrates intracellular environments — effective for intracellular pathogens; active against Bacillus anthracis and Yersinia pestis\nWARNINGS: Tendon rupture (especially Achilles) — particularly with steroids. Avoid in children, pregnant. QT prolongation. Increasing fluoroquinolone resistance globally. Tendinopathy and tendon rupture (especially Achilles in >60 years or steroid users). QTc prolongation. Doubles theophylline and caffeine levels (drug interaction). Peripheral neuropathy. Avoid in growing children (<18) except life-threatening indications (anthrax). Fluoroquinolone-resistant gram-negatives increasing.\nNotes: Near 100% oral bioavailability means ciprofloxacin PO is equivalent to IV for systemic infections — critical in field/PFC settings where IV access is limited. Anthrax PEP teaching: 60-day course required because anthrax spores can germinate late in alveolar macrophages. Shorter courses fail. Deployed personnel must complete full 60-day course even if asymptomatic. Switching to doxycycline after culture sensitivity acceptable.",
    "e": "strong",
    "u": "",
    "s": ""
@@ -4352,6 +4362,7 @@
    "t": "primary",
    "c": "vasoactive",
    "l": [
+    "pfc",
     "ccatt"
    ],
    "k": [
@@ -4361,9 +4372,14 @@
     "overview",
     "level:ccatt",
     "primary",
-    "norepi"
+    "norepi",
+    "norepinephrine_ext",
+    "level:pfc",
+    "norepinephrine (levophed) — detailed protocol",
+    "endogenous catecholamine / alpha-1 dominant + beta-1 agonist / first-line vasopressor",
+    "detailed protocol"
    ],
-   "x": "DRUG: Norepinephrine (Levophed)\nClass: Endogenous catecholamine / α1, β1 agonist\nCategory: vasoactive\nLevels: ccatt\nPrimary use: First-line vasopressor for septic and distributive shock\nMechanism: Potent α1 agonism → ↑SVR (vasoconstriction); moderate β1 → inotropy without significant tachycardia; minimal β2; most evidence-based vasopressor for septic shock per Surviving Sepsis guidelines\nWARNINGS: Central line REQUIRED — extravasation causes tissue necrosis. Phentolamine for extravasation rescue.\nNotes: CCATT carries NE as primary vasopressor for CASEVAC. Full hemodynamic monitoring (A-line, CVP) ideal during transport.",
+   "x": "DRUG: Norepinephrine (Levophed)\nClass: Endogenous catecholamine / α1, β1 agonist / Alpha-1 dominant + Beta-1 agonist / First-line vasopressor\nCategory: vasoactive\nLevels: pfc, ccatt\nPrimary use: First-line vasopressor for septic and distributive shock. Septic shock first-line vasopressor; distributive shock; post-cardiac arrest MAP support; refractory hypotension\nMechanism: Potent α1 agonism → ↑SVR (vasoconstriction); moderate β1 → inotropy without significant tachycardia; minimal β2; most evidence-based vasopressor for septic shock per Surviving Sepsis guidelines. Alpha-1 dominant agonism → potent peripheral vasoconstriction → increases SVR and MAP; beta-1 agonism → mild inotropy/chronotropy; maintains coronary and cerebral perfusion pressure; superior to dopamine for septic shock mortality (SOAP II trial); central line preferred but peripheral acceptable temporarily\nWARNINGS: Central line REQUIRED — extravasation causes tissue necrosis. Phentolamine for extravasation rescue. Tissue necrosis with extravasation — treat immediately with phentolamine 5 mg in 10 mL NS infiltrated into area. Reflex bradycardia at high doses. Mesenteric ischemia with prolonged high-dose use. Peripheral IV: monitor every 30 min for extravasation.\nNotes: CCATT carries NE as primary vasopressor for CASEVAC. Full hemodynamic monitoring (A-line, CVP) ideal during transport. NE extravasation antidote: phentolamine 5-10 mg in 10 mL NS injected into extravasated area within 12h reverses necrosis. Every provider using peripheral NE must know this — prevention and treatment.",
    "e": "strong",
    "u": "",
    "s": ""
@@ -6679,9 +6695,13 @@
     "adenosine (adenocard)",
     "cardiac",
     "overview",
-    "primary"
+    "primary",
+    "adenosine (adenocard) — extended protocol",
+    "adenosine_ext",
+    "endogenous nucleoside / av nodal blocker / svt terminator",
+    "extended protocol"
    ],
-   "x": "DRUG: Adenosine (Adenocard)\nClass: Endogenous purine nucleoside / AV nodal blocker\nCategory: cardiac\nLevels: pfc, ccatt\nPrimary use: SVT (supraventricular tachycardia) termination; diagnostic for wide-complex tachycardia\nMechanism: Activates A1 adenosine receptors → hyperpolarizes AV nodal cells → transient AV block (6-12 seconds) → interrupts re-entrant SVT circuits; endogenous molecule with ultra-short half-life (<10 seconds) → effects fully reversible in seconds; diagnostic: adenosine-sensitive SVT terminates, VT does not\nWARNINGS: Must give as RAPID IV push followed immediately by saline flush — half-life <10 seconds means slow push = ineffective. Causes transient chest tightness, flushing, dyspnea — warn patient. CONTRAINDICATED in 2nd/3rd degree AV block, sick sinus syndrome, WPW with wide complex.\nNotes: Rapid push technique is everything: adenosine 6 mg rapid push → immediate 20 mL NS flush → raise arm. Peripheral antecubital vein acceptable if central unavailable.",
+   "x": "DRUG: Adenosine (Adenocard)\nClass: Endogenous purine nucleoside / AV nodal blocker / SVT terminator\nCategory: cardiac\nLevels: pfc, ccatt\nPrimary use: SVT (supraventricular tachycardia) termination; diagnostic for wide-complex tachycardia. SVT (PSVT) conversion; stable narrow-complex tachycardia diagnosis; WPW-associated SVT (avoid)\nMechanism: Activates A1 adenosine receptors → hyperpolarizes AV nodal cells → transient AV block (6-12 seconds) → interrupts re-entrant SVT circuits; endogenous molecule with ultra-short half-life (<10 seconds) → effects fully reversible in seconds; diagnostic: adenosine-sensitive SVT terminates, VT does not. Activates A1 adenosine receptors in AV node → hyperpolarization → transient AV block → interrupts reentrant circuits → terminates SVT; half-life 10 seconds → effect lasts only 20-30 seconds; must be given as rapid IV push followed immediately by saline flush; diagnostic: transiently slows ventricular rate to reveal atrial flutter waves\nWARNINGS: Must give as RAPID IV push followed immediately by saline flush — half-life <10 seconds means slow push = ineffective. Causes transient chest tightness, flushing, dyspnea — warn patient. CONTRAINDICATED in 2nd/3rd degree AV block, sick sinus syndrome, WPW with wide complex. MUST give as rapid IV push (1-2 sec) + immediate 20 mL flush — slow infusion is ineffective (10-sec half-life). CONTRAINDICATED in WPW with atrial fibrillation (irregular wide-complex) — may accelerate conduction via accessory pathway → VF. Asthma: causes bronchospasm — use verapamil instead. Patients on dipyridamole: reduce dose to 3 mg.\nNotes: Rapid push technique is everything: adenosine 6 mg rapid push → immediate 20 mL NS flush → raise arm. Peripheral antecubital vein acceptable if central unavailable. Adenosine technique is everything: rapid push into large antecubital or central line immediately followed by 20 mL saline bolus. Patients should be warned of transient flushing, chest tightness, and sense of doom (brief, 20-30 sec). Have crash cart ready.",
    "e": "strong",
    "u": "",
    "s": ""
@@ -8226,9 +8246,13 @@
     "haloperidol",
     "primary",
     "analgesia",
-    "haloperidol (haldol)"
+    "haloperidol (haldol)",
+    "haloperidol_ext",
+    "haloperidol (haldol) — extended protocol",
+    "first-generation antipsychotic / d2 dopamine antagonist / butyrophenone",
+    "extended protocol"
    ],
-   "x": "DRUG: Haloperidol (Haldol)\nClass: Typical antipsychotic / D2 receptor antagonist / Butyrophenone\nCategory: analgesia\nLevels: pfc, ccatt\nPrimary use: Acute agitation; behavioral emergency; delirium; ICU sedation adjunct\nMechanism: Potent D2 dopamine receptor antagonism → antipsychotic + sedation; some H1 and α1 blockade; less respiratory depression than benzodiazepines; IV form for acute agitation; long half-life (24h) → sustained effect; lower seizure threshold; EPS risk via nigrostriatal D2 blockade\nWARNINGS: QT prolongation — monitor ECG with IV use. EPS (extrapyramidal symptoms) and acute dystonia — have diphenhydramine ready. Do NOT combine olanzapine IM + lorazepam IM (fatal respiratory depression reported). NMS risk.\nNotes: B52 protocol: haloperidol 5 mg + midazolam 5 mg + promethazine 50 mg IM = rapid behavioral control in austere setting. Diphenhydramine 50 mg IV immediately reverses acute dystonic reaction.",
+   "x": "DRUG: Haloperidol (Haldol)\nClass: Typical antipsychotic / D2 receptor antagonist / Butyrophenone / First-generation antipsychotic / D2 dopamine antagonist\nCategory: analgesia\nLevels: pfc, ccatt\nPrimary use: Acute agitation; behavioral emergency; delirium; ICU sedation adjunct. ICU delirium and agitation; acute psychosis; B52 chemical restraint; nausea (antiemetic); Tourette syndrome\nMechanism: Potent D2 dopamine receptor antagonism → antipsychotic + sedation; some H1 and α1 blockade; less respiratory depression than benzodiazepines; IV form for acute agitation; long half-life (24h) → sustained effect; lower seizure threshold; EPS risk via nigrostriatal D2 blockade. Potent D2 dopamine receptor blockade → antipsychotic and antiemetic effects; also blocks D1, alpha-1, H1, and muscarinic receptors; IV/IM formulations available; less sedating than BZDs; DOES NOT reduce delirium duration (AID-ICU, MIND-USA trials) but reduces agitation severity and benzodiazepine requirements; QTc prolongation but clinically safe up to QTc 550 ms (MIND-USA secondary analysis)\nWARNINGS: QT prolongation — monitor ECG with IV use. EPS (extrapyramidal symptoms) and acute dystonia — have diphenhydramine ready. Do NOT combine olanzapine IM + lorazepam IM (fatal respiratory depression reported). NMS risk. QTc prolongation (monitor, but MIND-USA: safe up to QTc 550 ms). Extrapyramidal reactions (dystonia, akathisia) — treat with diphenhydramine 25-50 mg IV. Neuroleptic malignant syndrome (rare but life-threatening: hyperthermia + rigidity + autonomic instability). Do NOT combine IM haloperidol with IV promethazine (extravasation risk).\nNotes: B52 protocol: haloperidol 5 mg + midazolam 5 mg + promethazine 50 mg IM = rapid behavioral control in austere setting. Diphenhydramine 50 mg IV immediately reverses acute dystonic reaction. ICU delirium evidence update: haloperidol does NOT reduce delirium-free days (AID-ICU 2022, MIND-USA 2018) — but does reduce agitation, benzodiazepine use, and intrusive memories (EuRIDICE 2023). Use for agitation control, not as delirium cure.",
    "e": "moderate",
    "u": "",
    "s": ""
@@ -15623,32 +15647,8 @@
    "s": ""
   },
   {
-   "i": 668,
-   "d": "Vasopressin — Extended Uses (ADH / V1/V2 agonist)",
-   "t": "primary",
-   "c": "vasoactive",
-   "l": [
-    "pfc",
-    "ccatt"
-   ],
-   "k": [
-    "endogenous peptide hormone / v1 vasopressor / v2 antidiuretic / gi vasoconstrictor",
-    "vasopressin — extended uses (adh / v1/v2 agonist)",
-    "vasoactive",
-    "level:pfc",
-    "vasopressin_ext",
-    "level:ccatt",
-    "overview",
-    "primary"
-   ],
-   "x": "DRUG: Vasopressin — Extended Uses (ADH / V1/V2 agonist)\nClass: Endogenous peptide hormone / V1 vasopressor / V2 antidiuretic / GI vasoconstrictor\nCategory: vasoactive\nLevels: pfc, ccatt\nPrimary use: Distributive shock vasopressor; cardiac arrest; variceal hemorrhage; diabetes insipidus; refractory hemorrhagic shock adjunct\nMechanism: V1 receptor agonism → peripheral vasoconstriction (catecholamine-independent); V2 receptor agonism → renal water reabsorption (ADH effect); V1 in GI tract → splanchnic vasoconstriction → reduces portal pressure for variceal bleeding; depleted in prolonged septic shock → exogenous replacement restores vascular tone\nWARNINGS: Coronary vasoconstriction — use with caution in known CAD. Mesenteric ischemia with high doses. Hyponatremia with excessive V2 stimulation. Not titratable like norepinephrine for BP management alone.\nNotes: DI after TBI or pituitary surgery: urine output >250 mL/hr + rising serum sodium = central DI. Desmopressin 1-4 mcg IV/SQ preferred over vasopressin for DI (pure V2 effect, no hemodynamic changes).",
-   "e": "strong",
-   "u": "",
-   "s": ""
-  },
-  {
    "i": 669,
-   "d": "Vasopressin — Extended Uses (ADH / V1/V2 agonist)",
+   "d": "Vasopressin",
    "t": "level_context",
    "c": "vasoactive",
    "l": [
@@ -15670,7 +15670,7 @@
   },
   {
    "i": 670,
-   "d": "Vasopressin — Extended Uses (ADH / V1/V2 agonist)",
+   "d": "Vasopressin",
    "t": "level_context",
    "c": "vasoactive",
    "l": [
@@ -15692,7 +15692,7 @@
   },
   {
    "i": 671,
-   "d": "Vasopressin — Extended Uses (ADH / V1/V2 agonist)",
+   "d": "Vasopressin",
    "t": "dual_use",
    "c": "vasoactive",
    "l": [
@@ -15715,7 +15715,7 @@
   },
   {
    "i": 672,
-   "d": "Vasopressin — Extended Uses (ADH / V1/V2 agonist)",
+   "d": "Vasopressin",
    "t": "dual_use",
    "c": "vasoactive",
    "l": [
@@ -15737,7 +15737,7 @@
   },
   {
    "i": 673,
-   "d": "Vasopressin — Extended Uses (ADH / V1/V2 agonist)",
+   "d": "Vasopressin",
    "t": "dual_use",
    "c": "vasoactive",
    "l": [
@@ -15759,7 +15759,7 @@
   },
   {
    "i": 674,
-   "d": "Vasopressin — Extended Uses (ADH / V1/V2 agonist)",
+   "d": "Vasopressin",
    "t": "dual_use",
    "c": "vasoactive",
    "l": [
@@ -15938,32 +15938,8 @@
    "s": ""
   },
   {
-   "i": 682,
-   "d": "Norepinephrine (Levophed) — Detailed Protocol",
-   "t": "primary",
-   "c": "vasoactive",
-   "l": [
-    "pfc",
-    "ccatt"
-   ],
-   "k": [
-    "norepinephrine_ext",
-    "level:pfc",
-    "vasoactive",
-    "overview",
-    "level:ccatt",
-    "norepinephrine (levophed) — detailed protocol",
-    "primary",
-    "endogenous catecholamine / alpha-1 dominant + beta-1 agonist / first-line vasopressor"
-   ],
-   "x": "DRUG: Norepinephrine (Levophed) — Detailed Protocol\nClass: Endogenous catecholamine / Alpha-1 dominant + Beta-1 agonist / First-line vasopressor\nCategory: vasoactive\nLevels: pfc, ccatt\nPrimary use: Septic shock first-line vasopressor; distributive shock; post-cardiac arrest MAP support; refractory hypotension\nMechanism: Alpha-1 dominant agonism → potent peripheral vasoconstriction → increases SVR and MAP; beta-1 agonism → mild inotropy/chronotropy; maintains coronary and cerebral perfusion pressure; superior to dopamine for septic shock mortality (SOAP II trial); central line preferred but peripheral acceptable temporarily\nWARNINGS: Tissue necrosis with extravasation — treat immediately with phentolamine 5 mg in 10 mL NS infiltrated into area. Reflex bradycardia at high doses. Mesenteric ischemia with prolonged high-dose use. Peripheral IV: monitor every 30 min for extravasation.\nNotes: NE extravasation antidote: phentolamine 5-10 mg in 10 mL NS injected into extravasated area within 12h reverses necrosis. Every provider using peripheral NE must know this — prevention and treatment.",
-   "e": "strong",
-   "u": "",
-   "s": ""
-  },
-  {
    "i": 683,
-   "d": "Norepinephrine (Levophed) — Detailed Protocol",
+   "d": "Norepinephrine (Levophed)",
    "t": "level_context",
    "c": "vasoactive",
    "l": [
@@ -15985,7 +15961,7 @@
   },
   {
    "i": 684,
-   "d": "Norepinephrine (Levophed) — Detailed Protocol",
+   "d": "Norepinephrine (Levophed)",
    "t": "level_context",
    "c": "vasoactive",
    "l": [
@@ -16007,7 +15983,7 @@
   },
   {
    "i": 685,
-   "d": "Norepinephrine (Levophed) — Detailed Protocol",
+   "d": "Norepinephrine (Levophed)",
    "t": "dual_use",
    "c": "vasoactive",
    "l": [
@@ -16030,7 +16006,7 @@
   },
   {
    "i": 686,
-   "d": "Norepinephrine (Levophed) — Detailed Protocol",
+   "d": "Norepinephrine (Levophed)",
    "t": "dual_use",
    "c": "vasoactive",
    "l": [
@@ -16053,7 +16029,7 @@
   },
   {
    "i": 687,
-   "d": "Norepinephrine (Levophed) — Detailed Protocol",
+   "d": "Norepinephrine (Levophed)",
    "t": "dual_use",
    "c": "vasoactive",
    "l": [
@@ -16075,7 +16051,7 @@
   },
   {
    "i": 688,
-   "d": "Norepinephrine (Levophed) — Detailed Protocol",
+   "d": "Norepinephrine (Levophed)",
    "t": "dual_use",
    "c": "vasoactive",
    "l": [
@@ -16257,32 +16233,8 @@
    "s": ""
   },
   {
-   "i": 696,
-   "d": "Adenosine (Adenocard) — Extended Protocol",
-   "t": "primary",
-   "c": "cardiac",
-   "l": [
-    "pfc",
-    "ccatt"
-   ],
-   "k": [
-    "adenosine (adenocard) — extended protocol",
-    "adenosine_ext",
-    "level:pfc",
-    "overview",
-    "level:ccatt",
-    "cardiac",
-    "primary",
-    "endogenous nucleoside / av nodal blocker / svt terminator"
-   ],
-   "x": "DRUG: Adenosine (Adenocard) — Extended Protocol\nClass: Endogenous nucleoside / AV nodal blocker / SVT terminator\nCategory: cardiac\nLevels: pfc, ccatt\nPrimary use: SVT (PSVT) conversion; stable narrow-complex tachycardia diagnosis; WPW-associated SVT (avoid)\nMechanism: Activates A1 adenosine receptors in AV node → hyperpolarization → transient AV block → interrupts reentrant circuits → terminates SVT; half-life 10 seconds → effect lasts only 20-30 seconds; must be given as rapid IV push followed immediately by saline flush; diagnostic: transiently slows ventricular rate to reveal atrial flutter waves\nWARNINGS: MUST give as rapid IV push (1-2 sec) + immediate 20 mL flush — slow infusion is ineffective (10-sec half-life). CONTRAINDICATED in WPW with atrial fibrillation (irregular wide-complex) — may accelerate conduction via accessory pathway → VF. Asthma: causes bronchospasm — use verapamil instead. Patients on dipyridamole: reduce dose to 3 mg.\nNotes: Adenosine technique is everything: rapid push into large antecubital or central line immediately followed by 20 mL saline bolus. Patients should be warned of transient flushing, chest tightness, and sense of doom (brief, 20-30 sec). Have crash cart ready.",
-   "e": "strong",
-   "u": "",
-   "s": ""
-  },
-  {
    "i": 697,
-   "d": "Adenosine (Adenocard) — Extended Protocol",
+   "d": "Adenosine (Adenocard)",
    "t": "level_context",
    "c": "cardiac",
    "l": [
@@ -16304,7 +16256,7 @@
   },
   {
    "i": 698,
-   "d": "Adenosine (Adenocard) — Extended Protocol",
+   "d": "Adenosine (Adenocard)",
    "t": "level_context",
    "c": "cardiac",
    "l": [
@@ -16326,7 +16278,7 @@
   },
   {
    "i": 699,
-   "d": "Adenosine (Adenocard) — Extended Protocol",
+   "d": "Adenosine (Adenocard)",
    "t": "dual_use",
    "c": "cardiac",
    "l": [
@@ -16349,7 +16301,7 @@
   },
   {
    "i": 700,
-   "d": "Adenosine (Adenocard) — Extended Protocol",
+   "d": "Adenosine (Adenocard)",
    "t": "dual_use",
    "c": "cardiac",
    "l": [
@@ -16372,7 +16324,7 @@
   },
   {
    "i": 701,
-   "d": "Adenosine (Adenocard) — Extended Protocol",
+   "d": "Adenosine (Adenocard)",
    "t": "dual_use",
    "c": "cardiac",
    "l": [
@@ -16868,32 +16820,8 @@
    "s": "mechanistic"
   },
   {
-   "i": 723,
-   "d": "Haloperidol (Haldol) — Extended Protocol",
-   "t": "primary",
-   "c": "analgesia",
-   "l": [
-    "pfc",
-    "ccatt"
-   ],
-   "k": [
-    "haloperidol_ext",
-    "haloperidol (haldol) — extended protocol",
-    "level:pfc",
-    "first-generation antipsychotic / d2 dopamine antagonist / butyrophenone",
-    "overview",
-    "level:ccatt",
-    "primary",
-    "analgesia"
-   ],
-   "x": "DRUG: Haloperidol (Haldol) — Extended Protocol\nClass: First-generation antipsychotic / D2 dopamine antagonist / Butyrophenone\nCategory: analgesia\nLevels: pfc, ccatt\nPrimary use: ICU delirium and agitation; acute psychosis; B52 chemical restraint; nausea (antiemetic); Tourette syndrome\nMechanism: Potent D2 dopamine receptor blockade → antipsychotic and antiemetic effects; also blocks D1, alpha-1, H1, and muscarinic receptors; IV/IM formulations available; less sedating than BZDs; DOES NOT reduce delirium duration (AID-ICU, MIND-USA trials) but reduces agitation severity and benzodiazepine requirements; QTc prolongation but clinically safe up to QTc 550 ms (MIND-USA secondary analysis)\nWARNINGS: QTc prolongation (monitor, but MIND-USA: safe up to QTc 550 ms). Extrapyramidal reactions (dystonia, akathisia) — treat with diphenhydramine 25-50 mg IV. Neuroleptic malignant syndrome (rare but life-threatening: hyperthermia + rigidity + autonomic instability). Do NOT combine IM haloperidol with IV promethazine (extravasation risk).\nNotes: ICU delirium evidence update: haloperidol does NOT reduce delirium-free days (AID-ICU 2022, MIND-USA 2018) — but does reduce agitation, benzodiazepine use, and intrusive memories (EuRIDICE 2023). Use for agitation control, not as delirium cure.",
-   "e": "moderate",
-   "u": "",
-   "s": ""
-  },
-  {
    "i": 724,
-   "d": "Haloperidol (Haldol) — Extended Protocol",
+   "d": "Haloperidol (Haldol)",
    "t": "level_context",
    "c": "analgesia",
    "l": [
@@ -16915,7 +16843,7 @@
   },
   {
    "i": 725,
-   "d": "Haloperidol (Haldol) — Extended Protocol",
+   "d": "Haloperidol (Haldol)",
    "t": "level_context",
    "c": "analgesia",
    "l": [
@@ -16937,7 +16865,7 @@
   },
   {
    "i": 726,
-   "d": "Haloperidol (Haldol) — Extended Protocol",
+   "d": "Haloperidol (Haldol)",
    "t": "dual_use",
    "c": "analgesia",
    "l": [
@@ -16960,7 +16888,7 @@
   },
   {
    "i": 727,
-   "d": "Haloperidol (Haldol) — Extended Protocol",
+   "d": "Haloperidol (Haldol)",
    "t": "dual_use",
    "c": "analgesia",
    "l": [
@@ -16982,7 +16910,7 @@
   },
   {
    "i": 728,
-   "d": "Haloperidol (Haldol) — Extended Protocol",
+   "d": "Haloperidol (Haldol)",
    "t": "dual_use",
    "c": "analgesia",
    "l": [
@@ -17005,7 +16933,7 @@
   },
   {
    "i": 729,
-   "d": "Haloperidol (Haldol) — Extended Protocol",
+   "d": "Haloperidol (Haldol)",
    "t": "dual_use",
    "c": "analgesia",
    "l": [
@@ -17458,34 +17386,8 @@
    "s": ""
   },
   {
-   "i": 749,
-   "d": "Ciprofloxacin — Bioterrorism / Special Uses",
-   "t": "primary",
-   "c": "abx",
-   "l": [
-    "r12",
-    "pfc",
-    "ccatt"
-   ],
-   "k": [
-    "level:r12",
-    "ciprofloxacin — bioterrorism / special uses",
-    "abx",
-    "fluoroquinolone / dna gyrase + topoisomerase iv inhibitor",
-    "level:pfc",
-    "overview",
-    "level:ccatt",
-    "primary",
-    "ciprofloxacin_ext"
-   ],
-   "x": "DRUG: Ciprofloxacin — Bioterrorism / Special Uses\nClass: Fluoroquinolone / DNA gyrase + topoisomerase IV inhibitor\nCategory: abx\nLevels: r12, pfc, ccatt\nPrimary use: Anthrax post-exposure prophylaxis; plague treatment; traveler diarrhea; UTI; Pseudomonas; bioterrorism agent treatment\nMechanism: Inhibits bacterial DNA gyrase (gram-negative focus) and topoisomerase IV → prevents DNA supercoiling and replication → bactericidal; broad gram-negative spectrum including Pseudomonas; excellent oral bioavailability (~80%) = IV equivalent; penetrates intracellular environments — effective for intracellular pathogens; active against Bacillus anthracis and Yersinia pestis\nWARNINGS: Tendinopathy and tendon rupture (especially Achilles in >60 years or steroid users). QTc prolongation. Doubles theophylline and caffeine levels (drug interaction). Peripheral neuropathy. Avoid in growing children (<18) except life-threatening indications (anthrax). Fluoroquinolone-resistant gram-negatives increasing.\nNotes: Anthrax PEP teaching: 60-day course required because anthrax spores can germinate late in alveolar macrophages. Shorter courses fail. Deployed personnel must complete full 60-day course even if asymptomatic. Switching to doxycycline after culture sensitivity acceptable.",
-   "e": "strong",
-   "u": "",
-   "s": ""
-  },
-  {
    "i": 750,
-   "d": "Ciprofloxacin — Bioterrorism / Special Uses",
+   "d": "Ciprofloxacin",
    "t": "level_context",
    "c": "abx",
    "l": [
@@ -17508,7 +17410,7 @@
   },
   {
    "i": 751,
-   "d": "Ciprofloxacin — Bioterrorism / Special Uses",
+   "d": "Ciprofloxacin",
    "t": "level_context",
    "c": "abx",
    "l": [
@@ -17531,7 +17433,7 @@
   },
   {
    "i": 752,
-   "d": "Ciprofloxacin — Bioterrorism / Special Uses",
+   "d": "Ciprofloxacin",
    "t": "level_context",
    "c": "abx",
    "l": [
@@ -17554,7 +17456,7 @@
   },
   {
    "i": 753,
-   "d": "Ciprofloxacin — Bioterrorism / Special Uses",
+   "d": "Ciprofloxacin",
    "t": "dual_use",
    "c": "abx",
    "l": [
@@ -17579,7 +17481,7 @@
   },
   {
    "i": 754,
-   "d": "Ciprofloxacin — Bioterrorism / Special Uses",
+   "d": "Ciprofloxacin",
    "t": "dual_use",
    "c": "abx",
    "l": [
@@ -17603,7 +17505,7 @@
   },
   {
    "i": 755,
-   "d": "Ciprofloxacin — Bioterrorism / Special Uses",
+   "d": "Ciprofloxacin",
    "t": "dual_use",
    "c": "abx",
    "l": [
@@ -17627,7 +17529,7 @@
   },
   {
    "i": 756,
-   "d": "Ciprofloxacin — Bioterrorism / Special Uses",
+   "d": "Ciprofloxacin",
    "t": "dual_use",
    "c": "abx",
    "l": [
@@ -18127,34 +18029,8 @@
    "s": ""
   },
   {
-   "i": 778,
-   "d": "Doxycycline — Extended Military Uses",
-   "t": "primary",
-   "c": "abx",
-   "l": [
-    "r12",
-    "pfc",
-    "ccatt"
-   ],
-   "k": [
-    "doxycycline — extended military uses",
-    "doxycycline_ext",
-    "level:r12",
-    "tetracycline antibiotic / protein synthesis inhibitor / intracellular pathogen coverage",
-    "abx",
-    "level:pfc",
-    "overview",
-    "level:ccatt",
-    "primary"
-   ],
-   "x": "DRUG: Doxycycline — Extended Military Uses\nClass: Tetracycline antibiotic / Protein synthesis inhibitor / Intracellular pathogen coverage\nCategory: abx\nLevels: r12, pfc, ccatt\nPrimary use: Malaria prophylaxis; anthrax treatment/PEP; Rickettsial diseases; RMSF; Lyme disease; CAP; SSTI; STIs; anti-inflammatory (subantimicrobial dose)\nMechanism: Inhibits 30S ribosomal subunit → blocks aminoacyl-tRNA binding → bacteriostatic; excellent intracellular penetration → effective for obligate intracellular pathogens (Rickettsia, Chlamydia, Brucella, Q fever); oral bioavailability 93%; long half-life (18-22h) → once or twice daily dosing; anti-inflammatory at subantimicrobial doses via MMP inhibition\nWARNINGS: Photosensitivity — severe sunburn risk in deployed tropical sun; use sunscreen. Esophageal irritation — take with full glass of water and remain upright 30 min. Avoid in pregnancy and children <8 years (teeth staining, bone growth). Take 2h before or 6h after calcium/antacids (chelation reduces absorption). Tooth discoloration historical concern with prolonged pediatric use.\nNotes: RMSF teaching: doxycycline is safe in ALL ages for RMSF (including children <8 years when life-threatening) — the benefit far outweighs cosmetic tooth risk. Do NOT use alternative antibiotics for suspected RMSF — chloramphenicol is the only alternative and is inferior. Empiric treatment saves lives.",
-   "e": "strong",
-   "u": "",
-   "s": ""
-  },
-  {
    "i": 779,
-   "d": "Doxycycline — Extended Military Uses",
+   "d": "Doxycycline",
    "t": "level_context",
    "c": "abx",
    "l": [
@@ -18177,7 +18053,7 @@
   },
   {
    "i": 780,
-   "d": "Doxycycline — Extended Military Uses",
+   "d": "Doxycycline",
    "t": "level_context",
    "c": "abx",
    "l": [
@@ -18200,7 +18076,7 @@
   },
   {
    "i": 781,
-   "d": "Doxycycline — Extended Military Uses",
+   "d": "Doxycycline",
    "t": "level_context",
    "c": "abx",
    "l": [
@@ -18223,7 +18099,7 @@
   },
   {
    "i": 782,
-   "d": "Doxycycline — Extended Military Uses",
+   "d": "Doxycycline",
    "t": "dual_use",
    "c": "abx",
    "l": [
@@ -18248,7 +18124,7 @@
   },
   {
    "i": 783,
-   "d": "Doxycycline — Extended Military Uses",
+   "d": "Doxycycline",
    "t": "dual_use",
    "c": "abx",
    "l": [
@@ -18273,7 +18149,7 @@
   },
   {
    "i": 784,
-   "d": "Doxycycline — Extended Military Uses",
+   "d": "Doxycycline",
    "t": "dual_use",
    "c": "abx",
    "l": [
@@ -18297,7 +18173,7 @@
   },
   {
    "i": 785,
-   "d": "Doxycycline — Extended Military Uses",
+   "d": "Doxycycline",
    "t": "dual_use",
    "c": "abx",
    "l": [
@@ -19021,6 +18897,106 @@
    "e": "investigational",
    "u": "Ischemia-reperfusion injury — endothelial free-radical scavenging",
    "s": "mechanistic"
+  },
+  {
+   "c": "abx",
+   "d": "Moxifloxacin",
+   "e": "strong",
+   "i": 816,
+   "k": [
+    "respiratory fluoroquinolone / dna gyrase / topoisomerase iv inhibitor",
+    "level:r12",
+    "moxifloxacin",
+    "avelox",
+    "abx",
+    "level:pfc",
+    "overview",
+    "level:ccatt",
+    "primary"
+   ],
+   "l": [
+    "r12",
+    "pfc",
+    "ccatt"
+   ],
+   "s": "",
+   "t": "primary",
+   "u": "",
+   "x": "DRUG: Moxifloxacin\nClass: Respiratory fluoroquinolone / DNA gyrase / Topoisomerase IV inhibitor\nCategory: abx\nLevels: r12, pfc, ccatt\nPrimary use: TCCC Tactical Field Care combat-wound antibiotic when casualty can take PO meds; 400 mg PO once daily (from the Combat Wound Medication Pack)\nMechanism: Inhibits bacterial DNA gyrase and topoisomerase IV → bactericidal; broad gram-positive (streptococci including S. pneumoniae, MSSA), gram-negative, anaerobic, and atypical coverage; ~90% oral bioavailability — PO is effective without IV access\nWARNINGS: QT prolongation — avoid with other QT-prolonging drugs (Class IA/III antiarrhythmics, macrolides, antipsychotics) and in casualties with arrhythmias, hypokalemia, or myocardial ischemia. Tendon rupture/tendinitis (especially Achilles; risk increased with corticosteroids). Exacerbates myasthenia gravis. CNS effects: dizziness, headache, peripheral neuropathy. C. difficile-associated diarrhea. Fluoroquinolone hypersensitivity; hepatic insufficiency per TCCC card.\nNotes: TCCC recommends antibiotics for ALL open combat wounds — give early; wound infections can kill or delay recovery. Not reliable against MRSA or Pseudomonas aeruginosa — do not assume coverage. If the casualty later cannot take PO, transition to a parenteral agent per TCCC/medical direction; when stepping back down to PO, begin moxifloxacin immediately after the final parenteral dose for antibiotic overlap."
+  },
+  {
+   "c": "abx",
+   "d": "Ertapenem (Invanz)",
+   "e": "strong",
+   "i": 817,
+   "k": [
+    "carbapenem / 1-beta-methyl beta-lactam / cell wall synthesis inhibitor",
+    "level:r12",
+    "ertapenem",
+    "invanz",
+    "abx",
+    "level:pfc",
+    "overview",
+    "level:ccatt",
+    "primary"
+   ],
+   "l": [
+    "r12",
+    "pfc",
+    "ccatt"
+   ],
+   "s": "",
+   "t": "primary",
+   "u": "",
+   "x": "DRUG: Ertapenem (Invanz)\nClass: Carbapenem (1-β-methyl) / Beta-lactam — cell wall synthesis inhibitor\nCategory: abx\nLevels: r12, pfc, ccatt\nPrimary use: TCCC combat-wound antibiotic when casualty CANNOT take PO (shock, unconsciousness); 1 g IV/IO/IM once daily\nMechanism: Binds penicillin-binding proteins (PBPs) → inhibits cell wall synthesis → bactericidal; broad gram-positive, gram-negative, and anaerobic coverage; long half-life with high protein binding allows once-daily dosing. NO reliable coverage of Pseudomonas aeruginosa, Acinetobacter baumannii, or MRSA.\nWARNINGS: Hypersensitivity to ertapenem/carbapenems or anaphylactic reaction to any beta-lactam. IM route is reconstituted with lidocaine HCl — contraindicated with amide local-anesthetic (lidocaine) hypersensitivity. Seizures and other CNS adverse effects reported — risk increased with renal impairment, CNS disorders, or excessive dose; dose-adjust in renal impairment (CrCl ≤30 mL/min: 500 mg daily). Reduces valproic acid levels (breakthrough seizure risk). C. difficile-associated diarrhea. Do not mix or co-infuse with dextrose-containing solutions; IV infuse over 30 minutes.\nNotes: TCCC guidelines (through 2024) list ertapenem as the parenteral combat-wound antibiotic; this KB's Ceftriaxone entry notes a TCCC change moving the parenteral choice to ceftriaxone — verify current unit SOP and medical direction before use. Transition IV/IO to PO (e.g., moxifloxacin) as soon as the casualty can take PO to conserve supplies and equipment."
+  },
+  {
+   "c": "abx",
+   "d": "Moxifloxacin",
+   "e": "strong",
+   "i": 818,
+   "k": [
+    "respiratory fluoroquinolone / dna gyrase / topoisomerase iv inhibitor",
+    "level:r12",
+    "moxifloxacin",
+    "avelox",
+    "abx",
+    "level:pfc",
+    "combat-wound infection prophylaxis — oral route (tccc) / civilian outpatient analog",
+    "dual_use"
+   ],
+   "l": [
+    "r12",
+    "pfc"
+   ],
+   "s": "TCCC-2026",
+   "t": "dual_use",
+   "u": "Combat-wound infection prophylaxis — oral route (TCCC) / civilian outpatient analog",
+   "x": "Moxifloxacin for Combat-wound infection prophylaxis — oral route (TCCC) / civilian outpatient analog\nTCCC Tactical Field Care: antibiotics for ALL open combat wounds — moxifloxacin 400 mg PO once daily (from the Combat Wound Medication Pack) when the casualty can take PO meds. Civilian analog: once-daily oral therapy for community-acquired pneumonia and other infections needing broad gram-positive/gram-negative/anaerobic/atypical coverage without IV access."
+  },
+  {
+   "c": "abx",
+   "d": "Ertapenem (Invanz)",
+   "e": "strong",
+   "i": 819,
+   "k": [
+    "carbapenem / 1-beta-methyl beta-lactam / cell wall synthesis inhibitor",
+    "level:r12",
+    "ertapenem",
+    "invanz",
+    "abx",
+    "level:pfc",
+    "combat-wound infection prophylaxis — parenteral route (tccc) / civilian severe-infection analog",
+    "dual_use"
+   ],
+   "l": [
+    "r12",
+    "pfc"
+   ],
+   "s": "TCCC-2026",
+   "t": "dual_use",
+   "u": "Combat-wound infection prophylaxis — parenteral route (TCCC) / civilian severe-infection analog",
+   "x": "Ertapenem (Invanz) for Combat-wound infection prophylaxis — parenteral route (TCCC) / civilian severe-infection analog\nTCCC: 1 g IV/IO/IM once daily when the casualty cannot take PO (shock, unconsciousness). Civilian analog: once-daily parenteral therapy for complicated intra-abdominal, skin/soft-tissue, and urinary tract infections. No reliable Pseudomonas aeruginosa, Acinetobacter, or MRSA coverage — do not use where those pathogens are expected."
   }
  ]
 }

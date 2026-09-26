@@ -30,6 +30,17 @@ const ok = (name, cond, detail = '') => {
 };
 const section = t => console.log(`\n${t}`);
 
+// v0.6.0: the console auto-opens ~1s after Ready; click the splash button only if still up
+const enterConsole = async (page) => {
+  await page.waitForFunction(() => !document.getElementById('bootBtn').disabled, { timeout: 20000 });
+  await page.evaluate(() => {
+    const boot = document.getElementById('boot');
+    const btn = document.getElementById('bootBtn');
+    if (boot && !boot.classList.contains('hide') && btn && !btn.disabled) btn.click();
+  });
+  await page.waitForFunction(() => document.getElementById('boot').classList.contains('hide'), { timeout: 20000 });
+};
+
 const browser = await chromium.launch(EXEC ? { executablePath: EXEC } : {});
 
 // =========================================================================
@@ -51,7 +62,13 @@ section('Boot, integrity, and counts');
   ok('knowledge base integrity hash matches', /Integrity verified/.test(boot),
      'boot log said: ' + boot.split('\n').find(l => /ntegrity/.test(l)));
 
-  await page.click('#bootBtn');
+  // v0.6.0: console may have auto-opened while the checks above ran — click only if still up
+  await page.evaluate(() => {
+    const boot = document.getElementById('boot');
+    const btn = document.getElementById('bootBtn');
+    if (boot && !boot.classList.contains('hide') && btn && !btn.disabled) btn.click();
+  });
+  await page.waitForFunction(() => document.getElementById('boot').classList.contains('hide'), { timeout: 20000 });
   await page.waitForSelector('#queryInput', { state: 'visible' });
 
   const state = await page.evaluate(() => ({
@@ -93,8 +110,7 @@ section('Query console');
 {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   await page.goto(APP);
-  await page.waitForFunction(() => !document.getElementById('bootBtn').disabled, { timeout: 20000 });
-  await page.click('#bootBtn');
+  await enterConsole(page);
   await page.waitForSelector('#queryInput', { state: 'visible' });
 
   const search = async (mode, q) => {
@@ -156,8 +172,7 @@ section('Decision engine');
 {
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
   await page.goto(APP);
-  await page.waitForFunction(() => !document.getElementById('bootBtn').disabled, { timeout: 20000 });
-  await page.click('#bootBtn');
+  await enterConsole(page);
   await page.waitForSelector('#deToggle', { state: 'visible' });
   await page.click('#deToggle');
 
@@ -244,8 +259,7 @@ section('Keyboard and dialog behaviour');
 {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   await page.goto(APP);
-  await page.waitForFunction(() => !document.getElementById('bootBtn').disabled, { timeout: 20000 });
-  await page.click('#bootBtn');
+  await enterConsole(page);
   await page.waitForSelector('#deToggle', { state: 'visible' });
 
   await page.focus('#deToggle');
@@ -283,8 +297,7 @@ section('Layout and contrast');
   for (const [w, h, name] of [[1440, 900, 'desktop'], [1024, 768, 'tablet'], [430, 860, 'phone']]) {
     const page = await browser.newPage({ viewport: { width: w, height: h } });
     await page.goto(APP);
-    await page.waitForFunction(() => !document.getElementById('bootBtn').disabled, { timeout: 20000 });
-    await page.click('#bootBtn');
+    await enterConsole(page);
     await page.waitForSelector('#queryInput', { state: 'visible' });
     await page.fill('#queryInput', 'ketamine');
     await page.click('#queryBtn');

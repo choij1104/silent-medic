@@ -7,6 +7,18 @@ The knowledge base is embedded in `index.html` as gzip+base64 and checked at boo
 
 ---
 
+## v0.7.1 — 2026-09-27
+
+- Decision engine: **critical vital-sign banner**. When an entered value is outside the
+  thresholds TCCC Field uses (HR <50 or >130, SpO2 <90, SBP <90) or GCS is 8 or lower, a
+  red banner lists the values and thresholds above the plan. It also appears when no rule
+  fires, above the prompt for more input, so critical vitals never produce a silent screen.
+  Display only: no treatment rule, citation, or knowledge-base change. Included in the
+  Copy/Print handoff text.
+- Service worker cache `silent-medic-v0.7.1`.
+
+---
+
 ## Unreleased — 2026-09-26
 
 - `test/qa.mjs`: regression-gate expectations updated to the verified v0.7.0

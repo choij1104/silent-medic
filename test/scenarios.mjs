@@ -17,6 +17,8 @@
  *   I4 output carries timestamp, inputs used, and the disclaimer (only when a plan is produced)
  *   I5 deterministic: the same inputs give the same recommendations on a second run
  *   I6 plan generated within 1,000 ms
+ *   I8 critical vital-sign banner shown exactly when HR <50 or >130, SpO2 <90, SBP <90 or GCS <=8
+ *      (v0.7.1; same thresholds as TCCC Field), with or without a plan
  *   I7 rule invariants (only when the trigger is present):
  *        extremity hemorrhage -> tourniquet
  *        nerve agent          -> atropine; and no TBI oxygen target unless TBI was entered or the
@@ -121,6 +123,7 @@ for (let i = 0; i < N; i++) {
       text: document.getElementById('deOutput').innerText,
       recs: recs.map(x => x.innerText.split('\n')[0]),
       uncited: recs.filter(x => !x.querySelector('.de-rec-cite')).length,
+      crit: !!document.querySelector('#deOutput .de-crit'),
       meta: (document.querySelector('.de-out-meta') || {}).innerText || '',
       foot: (document.querySelector('.de-out-foot') || {}).innerText || '',
     };
@@ -136,6 +139,7 @@ for (let i = 0; i < N; i++) {
     I3_all_cited: a.uncited === 0,
     I5_deterministic: JSON.stringify(a.recs) === JSON.stringify(b.recs),
     I6_under_1s: a.ms < 1000,
+    I8_critical_vitals_banner: a.crit === (sc.hr < 50 || sc.hr > 130 || sc.spo2 < 90 || sc.sbp < 90 || sc.gcs <= 8),
   };
   if (a.recs.length > 0) checks.I4_meta_disclaimer = /Generated/.test(a.meta) && /Inputs/.test(a.meta) && /not a substitute/i.test(a.foot);
   const rules = {};
@@ -150,7 +154,7 @@ for (let i = 0; i < N; i++) {
   if (has(sc.met, 'heat') && sc.gcs < 15) rules.no_ors_when_altered = !/Oral rehydration salts 500/.test(a.text);
   for (const [k, v] of Object.entries(rules)) checks['I7_' + k] = v;
   const pass = Object.values(checks).every(Boolean);
-  report.scenarios.push({ ...sc, noFindings, prompted: a.recs.length === 0, viewport: `${w}x${h}`, ms: Math.round(a.ms), recCount: a.recs.length, checks, pass,
+  report.scenarios.push({ ...sc, noFindings, prompted: a.recs.length === 0, critBanner: a.crit, viewport: `${w}x${h}`, ms: Math.round(a.ms), recCount: a.recs.length, checks, pass,
     errors: errors.slice(0, 3), failed: Object.entries(checks).filter(([, v]) => !v).map(([k]) => k) });
   await ctx.close();
 }

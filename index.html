@@ -17,14 +17,15 @@ try {
 <link rel="apple-touch-icon" href="./icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="SILENT MEDIC">
-<title>SILENT MEDIC v0.7.0 — Offline Clinical Decision Support</title>
+<title>SILENT MEDIC v0.7.1 — Offline Clinical Decision Support</title>
 <!--
-  SILENT MEDIC v0.7.0 — Offline Clinical Decision Support for Prolonged Field Care
+  SILENT MEDIC v0.7.1 — Offline Clinical Decision Support for Prolonged Field Care
   © 2026 Jae H. Choi, MSc, PhD, DVSc
   Knowledge base: TCCC-RX (113 drugs · 440 dual-use mappings · 9 categories)
   Runtime: Browser-resident; no data transmitted.
 
   VERSION HISTORY
+  v0.7.1  2026-09-27  Critical vital-sign banner in the decision engine (display only).
   v0.7.0  2026-09-26  Interaction checker, dose calculator, KB dedupe. No
                       decision-engine rules changed; KB_EXPECTED_SHA256 recomputed.
                       · INTERACTION CHECKER (Tools panel): select 2+ drugs, get
@@ -940,6 +941,9 @@ body {
 .de-rec-detail{font-size:13px;color:var(--text-2);line-height:1.5}
 .de-rec-cite{font-size:12px;color:#1b6e3a;margin-top:5px;font-style:italic}
 .de-rec-warning{background:#fdecea;border-left-color:var(--red)}
+/* v0.7.1: critical vital-sign banner (display only) */
+.de-crit{background:var(--red-bg);color:var(--red);border:1px solid var(--red);border-left-width:4px;border-radius:4px;padding:10px 12px;margin-bottom:12px;font-size:13px;line-height:1.5}
+.de-crit strong{letter-spacing:.5px}
 .de-rec-pfc{background:#fff3e0;border-left-color:var(--orange)}
 .de-disclaimer{margin-top:14px;padding:10px;background:#fff8e1;border:1px solid #7a5f00;border-radius:6px;font-size:12px;color:#5a4500;line-height:1.6}
 
@@ -1293,7 +1297,7 @@ select.user-badge option { color: #1c2e3e; }
       <span class="icon-box">SM</span>
       SILENT MEDIC
     </div>
-    <div class="boot-sub">Offline Clinical Decision Support · v0.7.0</div>
+    <div class="boot-sub">Offline Clinical Decision Support · v0.7.1</div>
     <div class="boot-log" id="bootLog"></div>
     <div class="boot-progress"><div id="bootBar"></div></div>
     <button class="boot-btn" id="bootBtn" disabled onclick="startSession()">Initializing…</button>
@@ -1428,7 +1432,7 @@ select.user-badge option { color: #1c2e3e; }
 </div>
 <!-- FOOTER -->
 <div class="footer">
-  <div class="footer-item" style="font-weight:700;">SILENT MEDIC v0.7.0 · BUILD 2026-09-26</div>
+  <div class="footer-item" style="font-weight:700;">SILENT MEDIC v0.7.1 · BUILD 2026-09-27</div>
   <div class="footer-item">TCCC-RX · 113 drugs · 440 dual-use maps</div>
   <div class="footer-item" id="footerKB">—</div>
   <div class="spacer"></div>
@@ -1471,7 +1475,7 @@ function setProgress(p) { bootBar.style.width = p + '%'; }
 // Expected SHA-256 of the decompressed KB JSON (computed at build time).
 // If the runtime hash differs, the data may be corrupted — surface a warning
 // in the UI rather than blocking the tool outright.
-const APP_VERSION = 'v0.7.0';
+const APP_VERSION = 'v0.7.1';
 // v0.6.0: session-start bookkeeping — startSession() is idempotent so the auto-boot
 // timer and a manual "Open Console" tap can never double-enter the console.
 let sessionStarted = false;
@@ -2992,10 +2996,20 @@ function generateDecisionPlan(){
       cite:'JTS Prolonged Casualty Care Guidelines + TCCC 2026 §6.a.3',
       class:'de-rec-pfc'});
   }
+  // === CRITICAL VITAL SIGNS (v0.7.1) ===
+  // Display only: flags entered values outside the thresholds TCCC Field uses (HR <50 or >130,
+  // SpO2 <90, SBP <90) plus GCS <=8 (the engine's airway threshold). Adds no treatment rule.
+  const crit=[];
+  if(I.hr!==null&&(I.hr<50||I.hr>130)) crit.push('HR '+I.hr+' (<50 or >130)');
+  if(I.spo2!==null&&I.spo2<90) crit.push('SpO2 '+I.spo2+'% (<90)');
+  if(I.sbp!==null&&I.sbp<90) crit.push('SBP '+I.sbp+' (<90)');
+  if(I.gcs!==null&&I.gcs<=8) crit.push('GCS '+I.gcs+' (≤8)');
+  const critHtml=crit.length?`<div class="de-crit" role="alert"><strong>⚠ CRITICAL VITAL SIGNS</strong> — ${crit.join(' · ')}. Reassess the casualty and enter all findings. Threshold flag only, not a treatment recommendation.</div>`:'';
   // === RENDER ===
   const out=document.getElementById('deOutput');
   if(!recs.length){
-    out.innerHTML='<div class="de-output-empty">No actions triggered by current inputs. Please complete: mechanism of injury, suspected injuries (at least one), and echelon. Then press GENERATE.</div>';
+    state.lastPlan=null;
+    out.innerHTML=critHtml+'<div class="de-output-empty">No actions triggered by current inputs. Please complete: mechanism of injury, suspected injuries (at least one), and echelon. Then press GENERATE.</div>';
     return;
   }
   const now=new Date();
@@ -3017,7 +3031,7 @@ function generateDecisionPlan(){
   if(I.metabolic.length) ctx.push('Metabolic: '+I.metabolic.map(label).join(', '));
   if(I.echelon) ctx.push('Echelon: '+label(I.echelon).toUpperCase());
   if(I.evacHr) ctx.push('Evac: '+I.evacHr+' hr');
-  state.lastPlan={recs,stamp,vitals:bits.join(' · '),ctx,count:recs.length};
+  state.lastPlan={recs,stamp,vitals:bits.join(' · '),ctx,count:recs.length,crit};
 
   out.innerHTML=`<div class="de-out-head">
       <div class="de-out-title">▶ TCCC 2026 ACTION SEQUENCE — ${recs.length} RECOMMENDATIONS</div>
@@ -3030,7 +3044,7 @@ function generateDecisionPlan(){
       <div><strong>Generated</strong> ${stamp} · SILENT MEDIC ${APP_VERSION} · offline rule base</div>
       ${bits.length?`<div><strong>Casualty</strong> ${bits.join(' · ')}</div>`:''}
       ${ctx.length?`<div><strong>Inputs</strong> ${ctx.join(' · ')}</div>`:''}
-    </div>`+
+    </div>`+critHtml+
     recs.map(r=>`<div class="de-rec ${r.class||''}">
       <div class="de-rec-time">${r.time}</div>
       <div class="de-rec-action">${r.action}</div>
@@ -3051,6 +3065,7 @@ function decisionPlanText(){
   L.push('Generated: '+p.stamp+' · offline rule base, no network');
   if(p.vitals) L.push('Casualty: '+p.vitals);
   p.ctx.forEach(c=>L.push(c));
+  if(p.crit&&p.crit.length) L.push('CRITICAL VITAL SIGNS: '+p.crit.join(' · ')+' (threshold flag only)');
   L.push('');
   p.recs.forEach((r,i)=>{
     L.push(`${i+1}. [${r.time}] ${r.action}`);

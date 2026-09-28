@@ -10,14 +10,18 @@
  *
  * Invariants per scenario
  *   I1 no page errors
- *   I2 a plan is produced (non-empty, has recommendations)
+ *   I2 never a blank result: a plan with recommendations, or, when no rule is triggered (possible
+ *      only when no injury, toxidrome or metabolic finding is entered), the engine's explicit prompt
+ *      asking for more input
  *   I3 every recommendation carries a citation
- *   I4 output carries timestamp, inputs used, and the disclaimer
+ *   I4 output carries timestamp, inputs used, and the disclaimer (only when a plan is produced)
  *   I5 deterministic: the same inputs give the same recommendations on a second run
  *   I6 plan generated within 1,000 ms
  *   I7 rule invariants (only when the trigger is present):
  *        extremity hemorrhage -> tourniquet
- *        nerve agent          -> atropine; and no TBI oxygen target unless TBI was entered
+ *        nerve agent          -> atropine; and no TBI oxygen target unless TBI was entered or the
+ *                                engine's own presumed-TBI rule applies (trauma mechanism gsw, blast,
+ *                                blunt or burn with GCS < 13)
  *        cyanide              -> hydroxocobalamin
  *        hyperkalemia ECG     -> calcium gluconate
  *        heat + GCS < 15      -> no oral rehydration salts
@@ -125,26 +129,28 @@ for (let i = 0; i < N; i++) {
   const a = await run();
   const b = await run();
   const has = (arr, v) => arr.includes(v);
+  const noFindings = !sc.injuries.length && !sc.tox.length && !sc.met.length;
   const checks = {
     I1_no_errors: errors.length === 0,
-    I2_plan_produced: a.text.length > 50 && a.recs.length > 0,
+    I2_plan_produced: a.recs.length > 0 ? a.text.length > 50 : (noFindings && /No actions triggered/.test(a.text)),
     I3_all_cited: a.uncited === 0,
-    I4_meta_disclaimer: /Generated/.test(a.meta) && /Inputs/.test(a.meta) && /not a substitute/i.test(a.foot),
     I5_deterministic: JSON.stringify(a.recs) === JSON.stringify(b.recs),
     I6_under_1s: a.ms < 1000,
   };
+  if (a.recs.length > 0) checks.I4_meta_disclaimer = /Generated/.test(a.meta) && /Inputs/.test(a.meta) && /not a substitute/i.test(a.foot);
   const rules = {};
   if (has(sc.injuries, 'hemorrhage_extremity')) rules.tourniquet = /tourniquet/i.test(a.text);
   if (has(sc.tox, 'nerve_agent')) {
     rules.atropine = /Atropine/i.test(a.text);
-    if (!has(sc.injuries, 'tbi') && sc.mech !== 'blast' && sc.mech !== 'blunt' && sc.mech !== 'gsw') rules.no_tbi_target = !/Target SpO2/.test(a.text);
+    const presumedTbi = ['gsw', 'blast', 'blunt', 'burn'].includes(sc.mech) && sc.gcs < 13;
+    if (!has(sc.injuries, 'tbi') && !presumedTbi) rules.no_tbi_target = !/Target SpO2/.test(a.text);
   }
   if (has(sc.tox, 'cyanide')) rules.hydroxocobalamin = /Hydroxocobalamin/i.test(a.text);
   if (has(sc.met, 'hyperkalemia_ecg')) rules.calcium = /Calcium gluconate/i.test(a.text);
   if (has(sc.met, 'heat') && sc.gcs < 15) rules.no_ors_when_altered = !/Oral rehydration salts 500/.test(a.text);
   for (const [k, v] of Object.entries(rules)) checks['I7_' + k] = v;
   const pass = Object.values(checks).every(Boolean);
-  report.scenarios.push({ ...sc, viewport: `${w}x${h}`, ms: Math.round(a.ms), recCount: a.recs.length, checks, pass,
+  report.scenarios.push({ ...sc, noFindings, prompted: a.recs.length === 0, viewport: `${w}x${h}`, ms: Math.round(a.ms), recCount: a.recs.length, checks, pass,
     errors: errors.slice(0, 3), failed: Object.entries(checks).filter(([, v]) => !v).map(([k]) => k) });
   await ctx.close();
 }

@@ -114,11 +114,10 @@ Working version under active development. The knowledge base reflects TCCC 2026
 guidelines including the Change 25-1 antibiotic revisions (cefadroxil/cephalexin PO,
 ceftriaxone IV/IO/IM replacing moxifloxacin and ertapenem).
 
-## Author
+## Publisher
 
-Jae Hyek Choi, MSc, PhD, DVSc
-Adjunct Assistant Professor, Department of Emergency Medicine
-UT Health San Antonio
+HAKOYA LLC dba Auravyx Systems
+Selma, Texas
 
 ---
 

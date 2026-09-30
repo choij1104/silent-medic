@@ -1,6 +1,6 @@
 {
  "source": "Extracted from silent-medic index.html kbData, v0.7.0 (build 2026-09-26). Single source of truth for downstream builds (App Store reference build, web full build, institutional build).",
- "kb_sha256_of_embedded_json": "4d15e38f064864e7312dfbacd705ff65d139095ba9779d053518c2e5add75ca0",
+ "kb_sha256_of_embedded_json": "5da97361deda5cb3395b05fd4cfe9a60aefd9d68fae5a5eda06d4daa2d824a48",
  "counts": {
   "drugs": 113,
   "chunks": 813,
@@ -18092,7 +18092,7 @@
     "level:pfc",
     "level:ccatt"
    ],
-   "x": "Doxycycline — Extended Military Uses — CCATT context: Inhalation anthrax: doxycycline 100 mg IV q12h + ciprofloxacin. Severe rickettsial disease. Brucella spondylitis. Doxycycline snakebite research (Dr. Choi laboratory).",
+   "x": "Doxycycline — Extended Military Uses — CCATT context: Inhalation anthrax: doxycycline 100 mg IV q12h + ciprofloxacin. Severe rickettsial disease. Brucella spondylitis. Doxycycline snakebite research.",
    "e": "",
    "u": "",
    "s": ""

@@ -116,7 +116,7 @@ ceftriaxone IV/IO/IM replacing moxifloxacin and ertapenem).
 
 ## Publisher
 
-HAKOYA LLC dba Auravyx Systems
+HAKOYA LLC
 Selma, Texas
 
 ---

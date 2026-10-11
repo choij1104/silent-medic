@@ -7,6 +7,21 @@ The knowledge base is embedded in `index.html` as gzip+base64 and checked at boo
 
 ---
 
+## v0.7.2 — 2026-10-11
+
+- Decision engine §12, combat-wound antibiotics aligned to the TCCC Guidelines (01 May 2026),
+  Tactical Field Care 12: able to take PO → cefadroxil 1 g PO once a day (alternative:
+  cephalexin 500 mg PO every 6 hours); unable to take PO (shock: SBP <90, the engine's
+  resuscitation trigger; unconsciousness: GCS <13) → ceftriaxone 2 g IV/IO/IM once a day.
+  Kit warnings now key on cefadroxil and ceftriaxone.
+- Knowledge base text (5 entries): ceftriaxone note states the 2026 guideline; moxifloxacin and
+  ertapenem primary and dual-use entries are marked as the former TCCC regimen. No record added
+  or removed; counts unchanged; `KB_EXPECTED_SHA256` recomputed; `data/kb.json` regenerated.
+- Kit checklist: moxifloxacin and ertapenem kept, labelled "(former)".
+- Service worker cache `silent-medic-v0.7.2`. `test/qa.mjs` 63/63.
+
+---
+
 ## v0.7.1 — 2026-09-27
 
 - Decision engine: **critical vital-sign banner**. When an entered value is outside the
